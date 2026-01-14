@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Гаджеты — зависимость или необходимость?</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .question { display: none; }
+        .question.active { display: block; }
+        #result { display: none; }
+        button { margin-top: 20px; padding: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background: #45a049; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Тест: Гаджеты — зависимость или необходимость?</h1>
+    <p>Ответьте на вопросы честно. Результаты останутся только у вас — сайт не собирает данные.</p>
+
+    <div id="quiz">
+        <!-- Вопрос 1 -->
+        <div class="question" id="q1">
+            <h3>1. Сколько времени в день вы проводите за гаджетами (смартфон, планшет, ноутбук и т.д.)?</h3>
+            <ul>
+                <li><label><input type="radio" name="q1" value="A"> Менее 1 часа</label></li>
+                <li><label><input type="radio" name="q1" value="B"> 1-2 часа</label></li>
+                <li><label><input type="radio" name="q1" value="C"> 2-4 часа</label></li>
+                <li><label><input type="radio" name="q1" value="D"> 4-6 часов</label></li>
+                <li><label><input type="radio" name="q1" value="E"> Более 6 часов</label></li>
+            </ul>
+        </div>
+
+        <!-- Вопрос 2 -->
+        <div class="question" id="q2">
+            <h3>2. Какие главные цели/причины использования гаджетов для вас приоритетны?</h3>
+            <ul>
+                <li><label><input type="radio" name="q2" value="A"> Обучение</label></li>
+                <li><label><input type="radio" name="q2" value="B"> Связь (звонки, сообщения)</label></li>
+                <li><label><input type="radio" name="q2" value="C"> Развлечения (игры, видео, музыка)</label></li>
+                <li><label><input type="radio" name="q2" value="D"> Работа</label></li>
+                <li><label><input type="radio" name="q2" value="E"> Разное (социальные сети, чтение и т.д.)</label></li>
+            </ul>
+        </div>
+
+        <!-- Вопрос 3 -->
+        <div class="question" id="q3">
+            <h3>3. Какие отрицательные последствия от использования гаджетов вы наблюдаете в своей жизни?</h3>
+            <ul>
+                <li><label><input type="radio" name="q3" value="A"> Нет отрицательных последствий</label></li>
+                <li><label><input type="radio" name="q3" value="B"> Проблемы с физическим здоровьем (усталость глаз, боли в шее и т.д.)</label></li>
+                <li><label><input type="radio" name="q3" value="C"> Влияние на учебу (снижение успеваемости, отвлечение)</label></li>
+                <li><label><input type="radio" name="q3" value="D"> Влияние на социальные отношения</label></li>
+                <li><label><input type="radio" name="q3" value="E"> Другие (сон, настроение и т.д.)</label></li>
+            </ul>
+        </div>
+
+        <!-- Вопрос 4 -->
+        <div class="question" id="q4">
+            <h3>4. Чувствовали ли вы когда-либо зависимость от гаджетов?</h3>
+            <ul>
+                <li><label><input type="radio" name="q4" value="A"> Нет</label></li>
+                <li><label><input type="radio" name="q4" value="B"> Да, но редко</label></li>
+                <li><label><input type="radio" name="q4" value="C"> Да, периодически</label></li>
+                <li><label><input type="radio" name="q4" value="D"> Да, часто</label></li>
+                <li><label><input type="radio" name="q4" value="E"> Да, постоянно</label></li>
+            </ul>
+        </div>
+
+        <!-- Вопрос 5 -->
+        <div class="question" id="q5">
+            <h3>5. Ваше мнение: являются ли гаджеты необходимостью или источником зависимости в современном мире?</h3>
+            <ul>
+                <li><label><input type="radio" name="q5" value="A"> Исключительно необходимость</label></li>
+                <li><label><input type="radio" name="q5" value="B"> В основном необходимость</label></li>
+                <li><label><input type="radio" name="q5" value="C"> Оба варианта</label></li>
+                <li><label><input type="radio" name="q5" value="D"> В основном зависимость</label></li>
+                <li><label><input type="radio" name="q5" value="E"> Исключительно источник зависимости</label></li>
+            </ul>
+        </div>
+
+        <button id="next">Далее</button>
+    </div>
+
+    <div id="result">
+        <h2>Ваши результаты</h2>
+        <div id="explanations"></div>
+        <div id="overall"></div>
+        <div id="ai-recommendation"></div>
+    </div>
+
+    <script>
+        const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
+        let currentQuestion = 0;
+        const answers = {};
+
+        // Шаблонные объяснения (основаны на твоём проекте)
+        const explanations = {
+            q1: {
+                A: 'Менее 1 часа: Это показывает низкую зависимость. Гаджеты для вас — инструмент, а не привычка. Рекомендация: Продолжайте баланс, добавьте больше оффлайн-активностей.',
+                B: '1-2 часа: Умеренное использование. Полезно для необходимости, но следите за ростом времени.',
+                C: '2-4 часа: Средний уровень. Может быть баланс, но риск отвлечения (см. психологические аспекты в проекте).',
+                D: '4-6 часов: Высокий уровень. Возможны физиологические последствия, как усталость глаз.',
+                E: 'Более 6 часов: Высокая зависимость. Рекомендация: Введите перерывы, как в разделе 1.3 проекта.'
+            },
+            q2: {
+                A: 'Обучение: Положительный аспект — гаджеты как необходимость для образования.',
+                B: 'Связь: Ключевой плюс (коммуникация), но может привести к социальной зависимости.',
+                C: 'Развлечения: Риск зависимости от соцсетей и игр (см. 1.2).',
+                D: 'Работа: Необходимость для продуктивности.',
+                E: 'Разное: Смешанно, следите за балансом.'
+            },
+            q3: {
+                A: 'Нет: Оптимистично, но проверьте скрытые эффекты (сон, внимание).',
+                B: 'Здоровье: Физиологические минусы (глаза, шея) — используйте фильтры света.',
+                C: 'Учеба: Влияет на когнитивные функции — делайте перерывы.',
+                D: 'Отношения: Социальный минус — больше реального общения.',
+                E: 'Другие: Общие проблемы, как настроение — мониторьте.'
+            },
+            q4: {
+                A: 'Нет: Низкая зависимость.',
+                B: 'Редко: Начало — контролируйте.',
+                C: 'Периодически: Средняя — рекомендации по балансу.',
+                D: 'Часто: Высокая — риск психологических аспектов.',
+                E: 'Постоянно: Критично — обратитесь за помощью.'
+            },
+            q5: {
+                A: 'Необходимость: Видите плюсы (образование, работа).',
+                B: 'В основном необходимость: Баланс с минусами.',
+                C: 'Оба: Реалистично — как в заключении проекта.',
+                D: 'В основном зависимость: Фокус на минусах.',
+                E: 'Зависимость: Нужны меры предосторожности.'
+            }
+        };
+
+        // Логика показа вопросов
+        document.getElementById('q1').classList.add('active');
+        const nextBtn = document.getElementById('next');
+        nextBtn.addEventListener('click', () => {
+            const currentQ = questions[currentQuestion];
+            const selected = document.querySelector(`input[name="${currentQ}"]:checked`);
+            if (!selected) {
+                alert('Выберите ответ!');
+                return;
+            }
+            answers[currentQ] = selected.value;
+            document.getElementById(currentQ).classList.remove('active');
+
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                document.getElementById(questions[currentQuestion]).classList.add('active');
+            } else {
+                showResults();
+            }
+        });
+
+        // Показ результатов
+        function showResults() {
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            let expText = '<h3>Пояснения к вашим ответам:</h3><ul>';
+            for (let q in answers) {
+                expText += `<li>Вопрос ${parseInt(q.slice(1))}: Ваш ответ — ${explanations[q][answers[q]].split(': ')[0]}. Это показывает, что ${explanations[q][answers[q]]}.</li>`;
+            }
+            expText += '</ul>';
+            document.getElementById('explanations').innerHTML = expText;
+
+            // Общий вывод (на основе баллов: присваиваем очки за "риск зависимости")
+            let score = 0;
+            score += ['A', 'B', 'C', 'D', 'E'].indexOf(answers.q1); // 0-4
+            score += ['A', 'B', 'C', 'D', 'E'].indexOf(answers.q4); // 0-4
+            score += ['A', 'B', 'C', 'D', 'E'].indexOf(answers.q5) * 0.5; // Weighted
+            let overall = score < 4 ? 'Низкая зависимость: Гаджеты — необходимость для вас.' :
+                          score < 7 ? 'Средняя: Баланс, но следите.' : 'Высокая: Рекомендуем меры.';
+            document.getElementById('overall').innerHTML = `<h3>Общий вывод:</h3><p>${overall}</p>`;
+
+            // Интеграция AI (Hugging Face, модель для генерации текста)
+            getAIRecommendation();
+        }
+
+        async function getAIRecommendation() {
+            const prompt = `На основе этих ответов на тест о гаджетах: 
+            Вопрос 1: ${explanations.q1[answers.q1]}
+            Вопрос 2: ${explanations.q2[answers.q2]}
+            Вопрос 3: ${explanations.q3[answers.q3]}
+            Вопрос 4: ${explanations.q4[answers.q4]}
+            Вопрос 5: ${explanations.q5[answers.q5]}
+            Сгенерируй персонализированные рекомендации (на русском, 200-300 слов), чтобы помочь снизить зависимость или улучшить использование гаджетов. Сделай текст естественным, не шаблонным, ссылайся на психологию и здоровье.`;
+
+            try {
+                const response = await fetch('https://api-inference.huggingface.co/models/gpt2', {  // Замени на лучшую модель, напр. 'EleutherAI/gpt-neo-125M' или русскую 'sberbank-ai/rugpt3small_based_on_gpt2'
+                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST',
+                    body: JSON.stringify({ inputs: prompt, parameters: { max_length: 300 } })
+                });
+                const result = await response.json();
+                const aiText = result[0]?.generated_text || 'Ошибка: AI не ответил.';
+                document.getElementById('ai-recommendation').innerHTML = `<h3>Персональные рекомендации от AI:</h3><p>${aiText}</p>`;
+            } catch (error) {
+                document.getElementById('ai-recommendation').innerHTML = '<p>AI недоступен. Используйте шаблонные рекомендации выше.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
