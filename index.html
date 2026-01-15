@@ -4,92 +4,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест: Гаджеты — зависимость или необходимость?</title>
+    <!-- Bootstrap CSS CDN для стиля и responsive дизайна -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Дополнительный CSS для кастомизации и анимаций -->
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .question { display: none; }
-        .question.active { display: block; }
+        body { padding: 20px; background-color: #f8f9fa; }
+        .question { 
+            display: none; 
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .question.active { 
+            display: block; 
+            opacity: 1;
+            transform: translateY(0);
+        }
         #result { display: none; }
-        button { margin-top: 20px; padding: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background: #45a049; }
-        ul { list-style-type: none; padding: 0; }
-        li { margin-bottom: 10px; }
+        .quiz-card { max-width: 800px; margin: 0 auto; }
+        .form-check { margin-bottom: 10px; }
+        #next { width: 100%; }
     </style>
 </head>
 <body>
-    <h1>Тест: Гаджеты — зависимость или необходимость?</h1>
-    <p>Ответьте на вопросы честно. Результаты останутся только у вас — сайт не собирает данные.</p>
+    <div class="container">
+        <h1 class="text-center my-4">Тест: Гаджеты — зависимость или необходимость?</h1>
+        <p class="text-center">Ответьте на вопросы честно. Результаты останутся только у вас — сайт не собирает данные.</p>
 
-    <div id="quiz">
-        <!-- Вопрос 1 -->
-        <div class="question" id="q1">
-            <h3>1. Сколько времени в день вы проводите за гаджетами (смартфон, планшет, ноутбук и т.д.)?</h3>
-            <ul>
-                <li><label><input type="radio" name="q1" value="A"> Менее 1 часа</label></li>
-                <li><label><input type="radio" name="q1" value="B"> 1-2 часа</label></li>
-                <li><label><input type="radio" name="q1" value="C"> 2-4 часа</label></li>
-                <li><label><input type="radio" name="q1" value="D"> 4-6 часов</label></li>
-                <li><label><input type="radio" name="q1" value="E"> Более 6 часов</label></li>
-            </ul>
+        <div id="quiz" class="quiz-card card p-4">
+            <!-- Вопрос 1 -->
+            <div class="question" id="q1">
+                <h3>1. Сколько времени в день вы проводите за гаджетами (смартфон, планшет, ноутбук и т.д.)?</h3>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q1" id="q1A" value="A">
+                    <label class="form-check-label" for="q1A">Менее 1 часа</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q1" id="q1B" value="B">
+                    <label class="form-check-label" for="q1B">1-2 часа</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q1" id="q1C" value="C">
+                    <label class="form-check-label" for="q1C">2-4 часа</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q1" id="q1D" value="D">
+                    <label class="form-check-label" for="q1D">4-6 часов</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q1" id="q1E" value="E">
+                    <label class="form-check-label" for="q1E">Более 6 часов</label>
+                </div>
+            </div>
+
+            <!-- Вопрос 2 -->
+            <div class="question" id="q2">
+                <h3>2. Какие главные цели/причины использования гаджетов для вас приоритетны?</h3>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q2" id="q2A" value="A">
+                    <label class="form-check-label" for="q2A">Обучение</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q2" id="q2B" value="B">
+                    <label class="form-check-label" for="q2B">Связь (звонки, сообщения)</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q2" id="q2C" value="C">
+                    <label class="form-check-label" for="q2C">Развлечения (игры, видео, музыка)</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q2" id="q2D" value="D">
+                    <label class="form-check-label" for="q2D">Работа</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q2" id="q2E" value="E">
+                    <label class="form-check-label" for="q2E">Разное (социальные сети, чтение и т.д.)</label>
+                </div>
+            </div>
+
+            <!-- Вопрос 3 -->
+            <div class="question" id="q3">
+                <h3>3. Какие отрицательные последствия от использования гаджетов вы наблюдаете в своей жизни?</h3>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q3" id="q3A" value="A">
+                    <label class="form-check-label" for="q3A">Нет отрицательных последствий</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q3" id="q3B" value="B">
+                    <label class="form-check-label" for="q3B">Проблемы с физическим здоровьем (усталость глаз, боли в шее и т.д.)</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q3" id="q3C" value="C">
+                    <label class="form-check-label" for="q3C">Влияние на учебу (снижение успеваемости, отвлечение)</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q3" id="q3D" value="D">
+                    <label class="form-check-label" for="q3D">Влияние на социальные отношения</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q3" id="q3E" value="E">
+                    <label class="form-check-label" for="q3E">Другие (сон, настроение и т.д.)</label>
+                </div>
+            </div>
+
+            <!-- Вопрос 4 -->
+            <div class="question" id="q4">
+                <h3>4. Чувствовали ли вы когда-либо зависимость от гаджетов?</h3>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q4" id="q4A" value="A">
+                    <label class="form-check-label" for="q4A">Нет</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q4" id="q4B" value="B">
+                    <label class="form-check-label" for="q4B">Да, но редко</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q4" id="q4C" value="C">
+                    <label class="form-check-label" for="q4C">Да, периодически</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q4" id="q4D" value="D">
+                    <label class="form-check-label" for="q4D">Да, часто</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q4" id="q4E" value="E">
+                    <label class="form-check-label" for="q4E">Да, постоянно</label>
+                </div>
+            </div>
+
+            <!-- Вопрос 5 -->
+            <div class="question" id="q5">
+                <h3>5. Ваше мнение: являются ли гаджеты необходимостью или источником зависимости в современном мире?</h3>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q5" id="q5A" value="A">
+                    <label class="form-check-label" for="q5A">Исключительно необходимость</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q5" id="q5B" value="B">
+                    <label class="form-check-label" for="q5B">В основном необходимость</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q5" id="q5C" value="C">
+                    <label class="form-check-label" for="q5C">Оба варианта</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q5" id="q5D" value="D">
+                    <label class="form-check-label" for="q5D">В основном зависимость</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q5" id="q5E" value="E">
+                    <label class="form-check-label" for="q5E">Исключительно источник зависимости</label>
+                </div>
+            </div>
+
+            <button id="next" class="btn btn-primary mt-3">Далее</button>
         </div>
 
-        <!-- Вопрос 2 -->
-        <div class="question" id="q2">
-            <h3>2. Какие главные цели/причины использования гаджетов для вас приоритетны?</h3>
-            <ul>
-                <li><label><input type="radio" name="q2" value="A"> Обучение</label></li>
-                <li><label><input type="radio" name="q2" value="B"> Связь (звонки, сообщения)</label></li>
-                <li><label><input type="radio" name="q2" value="C"> Развлечения (игры, видео, музыка)</label></li>
-                <li><label><input type="radio" name="q2" value="D"> Работа</label></li>
-                <li><label><input type="radio" name="q2" value="E"> Разное (социальные сети, чтение и т.д.)</label></li>
-            </ul>
+        <div id="result" class="quiz-card card p-4 mt-4">
+            <h2 class="text-center">Ваши результаты</h2>
+            <div id="explanations"></div>
+            <div id="overall"></div>
+            <div id="ai-recommendation"></div>
         </div>
-
-        <!-- Вопрос 3 -->
-        <div class="question" id="q3">
-            <h3>3. Какие отрицательные последствия от использования гаджетов вы наблюдаете в своей жизни?</h3>
-            <ul>
-                <li><label><input type="radio" name="q3" value="A"> Нет отрицательных последствий</label></li>
-                <li><label><input type="radio" name="q3" value="B"> Проблемы с физическим здоровьем (усталость глаз, боли в шее и т.д.)</label></li>
-                <li><label><input type="radio" name="q3" value="C"> Влияние на учебу (снижение успеваемости, отвлечение)</label></li>
-                <li><label><input type="radio" name="q3" value="D"> Влияние на социальные отношения</label></li>
-                <li><label><input type="radio" name="q3" value="E"> Другие (сон, настроение и т.д.)</label></li>
-            </ul>
-        </div>
-
-        <!-- Вопрос 4 -->
-        <div class="question" id="q4">
-            <h3>4. Чувствовали ли вы когда-либо зависимость от гаджетов?</h3>
-            <ul>
-                <li><label><input type="radio" name="q4" value="A"> Нет</label></li>
-                <li><label><input type="radio" name="q4" value="B"> Да, но редко</label></li>
-                <li><label><input type="radio" name="q4" value="C"> Да, периодически</label></li>
-                <li><label><input type="radio" name="q4" value="D"> Да, часто</label></li>
-                <li><label><input type="radio" name="q4" value="E"> Да, постоянно</label></li>
-            </ul>
-        </div>
-
-        <!-- Вопрос 5 -->
-        <div class="question" id="q5">
-            <h3>5. Ваше мнение: являются ли гаджеты необходимостью или источником зависимости в современном мире?</h3>
-            <ul>
-                <li><label><input type="radio" name="q5" value="A"> Исключительно необходимость</label></li>
-                <li><label><input type="radio" name="q5" value="B"> В основном необходимость</label></li>
-                <li><label><input type="radio" name="q5" value="C"> Оба варианта</label></li>
-                <li><label><input type="radio" name="q5" value="D"> В основном зависимость</label></li>
-                <li><label><input type="radio" name="q5" value="E"> Исключительно источник зависимости</label></li>
-            </ul>
-        </div>
-
-        <button id="next">Далее</button>
     </div>
 
-    <div id="result">
-        <h2>Ваши результаты</h2>
-        <div id="explanations"></div>
-        <div id="overall"></div>
-        <div id="ai-recommendation"></div>
-    </div>
-
+    <!-- Bootstrap JS CDN для интерактивности (poppers, etc.) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- JavaScript логика теста (без изменений, но адаптирована под Bootstrap) -->
     <script>
         const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
         let currentQuestion = 0;
@@ -134,7 +215,7 @@
             }
         };
 
-        // Логика показа вопросов
+        // Показ первого вопроса
         document.getElementById('q1').classList.add('active');
         const nextBtn = document.getElementById('next');
         nextBtn.addEventListener('click', () => {
@@ -160,23 +241,23 @@
             document.getElementById('quiz').style.display = 'none';
             document.getElementById('result').style.display = 'block';
 
-            let expText = '<h3>Пояснения к вашим ответам:</h3><ul>';
+            let expText = '<h3>Пояснения к вашим ответам:</h3><ul class="list-group">';
             for (let q in answers) {
-                expText += `<li>Вопрос ${parseInt(q.slice(1))}: Ваш ответ — ${explanations[q][answers[q]].split(': ')[0]}. Это показывает, что ${explanations[q][answers[q]]}.</li>`;
+                expText += `<li class="list-group-item">Вопрос ${parseInt(q.slice(1))}: Ваш ответ — ${explanations[q][answers[q]].split(': ')[0]}. Это показывает, что ${explanations[q][answers[q]]}.</li>`;
             }
             expText += '</ul>';
             document.getElementById('explanations').innerHTML = expText;
 
-            // Общий вывод (на основе баллов: присваиваем очки за "риск зависимости")
+            // Общий вывод (на основе баллов)
             let score = 0;
             score += ['A', 'B', 'C', 'D', 'E'].indexOf(answers.q1); // 0-4
             score += ['A', 'B', 'C', 'D', 'E'].indexOf(answers.q4); // 0-4
             score += ['A', 'B', 'C', 'D', 'E'].indexOf(answers.q5) * 0.5; // Weighted
             let overall = score < 4 ? 'Низкая зависимость: Гаджеты — необходимость для вас.' :
                           score < 7 ? 'Средняя: Баланс, но следите.' : 'Высокая: Рекомендуем меры.';
-            document.getElementById('overall').innerHTML = `<h3>Общий вывод:</h3><p>${overall}</p>`;
+            document.getElementById('overall').innerHTML = `<h3>Общий вывод:</h3><p class="alert alert-info">${overall}</p>`;
 
-            // Интеграция AI (Hugging Face, модель для генерации текста)
+            // Интеграция AI (Hugging Face)
             getAIRecommendation();
         }
 
@@ -190,16 +271,16 @@
             Сгенерируй персонализированные рекомендации (на русском, 200-300 слов), чтобы помочь снизить зависимость или улучшить использование гаджетов. Сделай текст естественным, не шаблонным, ссылайся на психологию и здоровье.`;
 
             try {
-                const response = await fetch('https://api-inference.huggingface.co/models/gpt2', {  // Замени на лучшую модель, напр. 'EleutherAI/gpt-neo-125M' или русскую 'sberbank-ai/rugpt3small_based_on_gpt2'
+                const response = await fetch('https://api-inference.huggingface.co/models/sberbank-ai/rugpt3small_based_on_gpt2', {
                     headers: { 'Content-Type': 'application/json' },
                     method: 'POST',
                     body: JSON.stringify({ inputs: prompt, parameters: { max_length: 300 } })
                 });
                 const result = await response.json();
                 const aiText = result[0]?.generated_text || 'Ошибка: AI не ответил.';
-                document.getElementById('ai-recommendation').innerHTML = `<h3>Персональные рекомендации от AI:</h3><p>${aiText}</p>`;
+                document.getElementById('ai-recommendation').innerHTML = `<h3>Персональные рекомендации от AI:</h3><p class="alert alert-secondary">${aiText}</p>`;
             } catch (error) {
-                document.getElementById('ai-recommendation').innerHTML = '<p>AI недоступен. Используйте шаблонные рекомендации выше.</p>';
+                document.getElementById('ai-recommendation').innerHTML = '<p class="alert alert-warning">AI недоступен. Используйте шаблонные рекомендации выше.</p>';
             }
         }
     </script>
