@@ -24,12 +24,51 @@
         .quiz-card { max-width: 800px; margin: 0 auto; }
         .form-check { margin-bottom: 10px; }
         #next { width: 100%; }
+
+        /* Dark mode styles */
+        .dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .dark-mode .card {
+            background-color: #1f1f1f;
+            border-color: #333;
+        }
+        .dark-mode .alert-info {
+            background-color: #0c5460;
+            border-color: #117a8b;
+            color: #e0e0e0;
+        }
+        .dark-mode .alert-secondary {
+            background-color: #343a40;
+            border-color: #494f54;
+            color: #e0e0e0;
+        }
+        .dark-mode .alert-warning {
+            background-color: #856404;
+            border-color: #d39e00;
+            color: #e0e0e0;
+        }
+        .dark-mode .list-group-item {
+            background-color: #282828;
+            border-color: #333;
+            color: #e0e0e0;
+        }
+        .dark-mode .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .dark-mode .btn-secondary {
+            background-color: #495057;
+            border-color: #495057;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="text-center my-4">Тест: Гаджеты — зависимость или необходимость?</h1>
         <p class="text-center">Ответьте на вопросы честно. Результаты останутся только у вас — сайт не собирает данные.</p>
+        <button id="toggle-dark" class="btn btn-secondary d-block mx-auto my-2">Тёмная тема</button>
 
         <div id="quiz" class="quiz-card card p-4">
             <!-- Вопрос 1 -->
@@ -170,16 +209,16 @@
 
     <!-- Bootstrap JS CDN для интерактивности (poppers, etc.) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <!-- JavaScript логика теста (без изменений, но адаптирована под Bootstrap) -->
+    <!-- JavaScript логика теста -->
     <script>
         const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
         let currentQuestion = 0;
         const answers = {};
 
-        // Шаблонные объяснения (основаны на твоём проекте)
+        // Шаблонные объяснения (расширенные для вариативности)
         const explanations = {
             q1: {
-                A: 'Менее 1 часа: Это показывает низкую зависимость. Гаджеты для вас — инструмент, а не привычка. Рекомендация: Продолжайте баланс, добавьте больше оффлайн-активностей.',
+                A: 'Менее 1 часа: Это показывает очень низкую зависимость. Гаджеты для вас — инструмент, а не привычка. Рекомендация: Продолжайте баланс, добавьте больше оффлайн-активностей.',
                 B: '1-2 часа: Умеренное использование. Полезно для необходимости, но следите за ростом времени.',
                 C: '2-4 часа: Средний уровень. Может быть баланс, но риск отвлечения (см. психологические аспекты в проекте).',
                 D: '4-6 часов: Высокий уровень. Возможны физиологические последствия, как усталость глаз.',
@@ -236,6 +275,13 @@
             }
         });
 
+        // Темная тема toggle
+        const toggleBtn = document.getElementById('toggle-dark');
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            toggleBtn.textContent = document.body.classList.contains('dark-mode') ? 'Светлая тема' : 'Тёмная тема';
+        });
+
         // Показ результатов
         function showResults() {
             document.getElementById('quiz').style.display = 'none';
@@ -248,40 +294,55 @@
             expText += '</ul>';
             document.getElementById('explanations').innerHTML = expText;
 
-            // Общий вывод (на основе баллов)
-            let score = 0;
-            score += ['A', 'B', 'C', 'D', 'E'].indexOf(answers.q1); // 0-4
-            score += ['A', 'B', 'C', 'D', 'E'].indexOf(answers.q4); // 0-4
-            score += ['A', 'B', 'C', 'D', 'E'].indexOf(answers.q5) * 0.5; // Weighted
-            let overall = score < 4 ? 'Низкая зависимость: Гаджеты — необходимость для вас.' :
-                          score < 7 ? 'Средняя: Баланс, но следите.' : 'Высокая: Рекомендуем меры.';
-            document.getElementById('overall').innerHTML = `<h3>Общий вывод:</h3><p class="alert alert-info">${overall}</p>`;
-
-            // Интеграция AI (Hugging Face)
-            getAIRecommendation();
-        }
-
-        async function getAIRecommendation() {
-            const prompt = `На основе этих ответов на тест о гаджетах: 
-            Вопрос 1: ${explanations.q1[answers.q1]}
-            Вопрос 2: ${explanations.q2[answers.q2]}
-            Вопрос 3: ${explanations.q3[answers.q3]}
-            Вопрос 4: ${explanations.q4[answers.q4]}
-            Вопрос 5: ${explanations.q5[answers.q5]}
-            Сгенерируй персонализированные рекомендации (на русском, 200-300 слов), чтобы помочь снизить зависимость или улучшить использование гаджетов. Сделай текст естественным, не шаблонным, ссылайся на психологию и здоровье.`;
-
-            try {
-                const response = await fetch('https://api-inference.huggingface.co/models/sberbank-ai/rugpt3small_based_on_gpt2', {
-                    headers: { 'Content-Type': 'application/json' },
-                    method: 'POST',
-                    body: JSON.stringify({ inputs: prompt, parameters: { max_length: 300 } })
-                });
-                const result = await response.json();
-                const aiText = result[0]?.generated_text || 'Ошибка: AI не ответил.';
-                document.getElementById('ai-recommendation').innerHTML = `<h3>Персональные рекомендации от AI:</h3><p class="alert alert-secondary">${aiText}</p>`;
-            } catch (error) {
-                document.getElementById('ai-recommendation').innerHTML = '<p class="alert alert-warning">AI недоступен. Используйте шаблонные рекомендации выше.</p>';
+            // Вариативный общий вывод на основе баллов
+            function getPoints(value) {
+                return ['A', 'B', 'C', 'D', 'E'].indexOf(value);
             }
+            let score = getPoints(answers.q1) + getPoints(answers.q3) + getPoints(answers.q4) + Math.floor(getPoints(answers.q5) * 0.5);
+
+            let levelIndex;
+            if (score < 3) levelIndex = 0;
+            else if (score < 6) levelIndex = 1;
+            else if (score < 9) levelIndex = 2;
+            else if (score < 12) levelIndex = 3;
+            else levelIndex = 4;
+
+            const levels = [
+                'Очень низкая зависимость: Гаджеты для вас — чистая необходимость. Вы эффективно используете их для продуктивных целей без заметных негативных эффектов. Продолжайте поддерживать этот баланс.',
+                'Низкая зависимость: Вы хорошо контролируете время и цели использования гаджетов. Они служат инструментом для обучения, работы или связи, с минимальными минусами.',
+                'Умеренная зависимость: Есть хороший баланс, но иногда гаджеты отвлекают или вызывают легкий дискомфорт. Обратите внимание на потенциальные риски для здоровья или продуктивности.',
+                'Высокая зависимость: Гаджеты занимают много времени и могут влиять на здоровье, отношения или настроение. Рекомендуется активно работать над снижением использования.',
+                'Очень высокая зависимость: Зависимость заметна и может серьезно мешать жизни. Срочно внедряйте изменения, возможно, с профессиональной помощью.'
+            ];
+            document.getElementById('overall').innerHTML = `<h3>Общий вывод:</h3><p class="alert alert-info">${levels[levelIndex]}</p>`;
+
+            // Вариативные рекомендации (комбинируются на основе ответов)
+            let recs = [];
+            const q1Points = getPoints(answers.q1);
+            const q4Points = getPoints(answers.q4);
+            const q5Points = getPoints(answers.q5);
+
+            if (q1Points > 2) recs.push('Сократите общее время за гаджетами. Установите ежедневные лимиты с помощью приложений для контроля экранного времени.');
+            if (answers.q2 === 'A' || answers.q2 === 'D') recs.push('Продолжайте использовать гаджеты для продуктивных целей, как обучение или работа, но чередуйте с оффлайн-активностями для отдыха.');
+            if (answers.q2 === 'B') recs.push('Связь важна, но попробуйте заменить часть сообщений на личные встречи, чтобы укрепить отношения.');
+            if (answers.q2 === 'C') recs.push('Сократите время на развлечения, такие как игры и видео. Замените их на хобби вроде спорта или чтения книг для снижения риска зависимости.');
+            if (answers.q2 === 'E') recs.push('Ваше смешанное использование требует баланса. Выделите время специально для полезных активностей, чтобы избежать перетекания в прокрастинацию.');
+            if (answers.q3 === 'A') recs.push('Отсутствие негативных последствий — это хорошо, но регулярно проверяйте свое самочувствие, чтобы предотвратить скрытые проблемы.');
+            if (answers.q3 === 'B') recs.push('Для проблем с физическим здоровьем применяйте правило 20-20-20: каждые 20 минут смотрите на объект в 6 метрах на 20 секунд. Используйте синие светофильтры.');
+            if (answers.q3 === 'C') recs.push('Чтобы минимизировать влияние на учебу, создайте "зоны без гаджетов" во время занятий и используйте техники фокусировки, как Pomodoro.');
+            if (answers.q3 === 'D') recs.push('Улучшите социальные отношения, планируя встречи без телефонов. Это поможет восстановить эмоциональные связи в реальной жизни.');
+            if (answers.q3 === 'E') recs.push('Для проблем со сном или настроением избегайте гаджетов за час до сна и практикуйте медитацию для улучшения психического здоровья.');
+            if (q4Points > 1) recs.push('Поскольку вы чувствуете зависимость, попробуйте цифровой детокс: один день в неделю без гаджетов для психологического отдыха.');
+            if (q5Points > 2) recs.push('Ваше мнение склоняется к зависимости — переосмыслите роль гаджетов, фокусируясь на их полезных аспектах и устанавливая строгие границы.');
+            if (levelIndex >= 3) recs.push('Если зависимость сильно влияет на жизнь, не стесняйтесь обратиться к психологу или специалисту по зависимостям для профессиональной поддержки.');
+            if (levelIndex <= 1) recs.push('Ваш низкий уровень зависимости — отличный пример. Поделитесь своим опытом с друзьями, чтобы помочь им достичь баланса.');
+
+            if (recs.length === 0) recs.push('Продолжайте в том же духе! Ваш подход к гаджетам идеально сбалансирован.');
+
+            let recText = '<h3>Персонализированные рекомендации:</h3><ul class="list-group">';
+            recs.forEach(r => recText += `<li class="list-group-item">${r}</li>`);
+            recText += '</ul>';
+            document.getElementById('ai-recommendation').innerHTML = recText;
         }
     </script>
 </body>
