@@ -8,36 +8,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --text: #fff;
-            --card-bg: rgba(255,255,255,0.95);
-            --accent: #ff6b6b;
+            --bg: #f0f4ff;
+            --text: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.97);
+            --card-border: rgba(100, 150, 255, 0.2);
+            --accent: #4d7cff;
+            --muted: #6b7280;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
         }
         [data-theme="dark"] {
-            --bg: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            --text: #e0e0e0;
-            --card-bg: rgba(30,30,30,0.92);
-            --accent: #ff8787;
+            --bg: #0f172a;
+            --text: #e2e8f0;
+            --card-bg: rgba(30, 41, 59, 0.92);
+            --card-border: rgba(100, 150, 255, 0.3);
+            --accent: #60a5fa;
+            --muted: #94a3b8;
+            --navbar-bg: rgba(15, 23, 42, 0.95);
         }
-        body { background: var(--bg); background-attachment: fixed; }
-        .quiz-card, .result-card {
-            backdrop-filter: blur(10px);
-            border: none;
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            transition: background 0.8s ease, color 0.8s ease;
         }
 
         .navbar {
-            background-color: var(--card-bg);
+            background: var(--navbar-bg);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--card-border);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             transition: all 0.8s ease;
         }
 
         .quiz-card, .result-card {
-            background-color: var(--card-bg);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--card-border);
-            border-radius: 16px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
         }
 
         h1, h2, h3, h4 {
@@ -45,39 +55,44 @@
             color: var(--text);
         }
 
-        /* Радио-кнопки */
+        /* Радио-кнопки — больше пространства */
+        .form-check {
+            margin-bottom: 18px;
+        }
         .form-check input[type="radio"] { display: none; }
         .form-check label {
             display: block;
-            padding: 16px 20px;
-            border-radius: 50px;
+            padding: 18px 24px;
+            border-radius: 999px;
             border: 2px solid var(--card-border);
-            background-color: var(--card-bg);
+            background: var(--card-bg);
             color: var(--text);
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
             cursor: pointer;
+            font-size: 1.1rem;
         }
         .form-check label:hover {
-            background-color: rgba(13, 110, 253, 0.08);
+            background: rgba(77, 124, 255, 0.08);
             border-color: var(--accent);
+            transform: translateX(4px);
         }
         .form-check input:checked + label {
             border-color: var(--accent);
-            background-color: rgba(13, 110, 253, 0.12);
-            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
-        }
-        [data-theme="dark"] .form-check label:hover {
-            background-color: rgba(77, 171, 247, 0.15);
+            background: rgba(77, 124, 255, 0.12);
+            box-shadow: 0 0 0 6px rgba(77, 124, 255, 0.15);
         }
 
-        /* Списки и алерты в тёмной теме */
+        /* Списки и алерты */
         .list-group-item {
-            background-color: var(--card-bg);
+            background: var(--card-bg);
             border-color: var(--card-border);
             color: var(--text);
         }
         .alert {
-            border-radius: 12px;
+            border-radius: 14px;
+            background: rgba(var(--accent-rgb, 77, 124, 255), 0.08);
+            border-color: var(--accent);
+            color: var(--text);
         }
 
         /* Звёзды */
@@ -95,19 +110,18 @@
 
         .rain-star {
             position: fixed;
-            font-size: 18px;
+            top: -180px; /* строго сверху, выше экрана */
+            font-size: 20px;
             z-index: 99999;
             pointer-events: none;
-            animation: themeRain 2.2s linear forwards;
+            animation: themeRain 2.4s linear forwards;
             color: var(--accent);
         }
         @keyframes themeRain {
-            0%   { transform: translateY(-150px) rotate(0deg); opacity: 1; }
+            0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
             50%  { color: var(--text); }
-            100% { transform: translateY(120vh) rotate(420deg); opacity: 0; }
+            100% { transform: translateY(calc(100vh + 200px)) rotate(480deg); opacity: 0; }
         }
-
-        .collapse.show { border-radius: 12px; overflow: hidden; }
     </style>
 </head>
 <body data-theme="light">
@@ -123,10 +137,10 @@
     </nav>
 
     <div class="container pt-5 mt-5">
-        <div id="quiz" class="quiz-card card p-4">
-            <!-- Вопросы (все 5) -->
+        <div id="quiz" class="quiz-card card p-5">
+            <!-- Вопросы -->
             <div class="question active" id="q1">
-                <h3 class="mb-3">1. Сколько времени в день вы проводите за гаджетами?</h3>
+                <h3 class="mb-4">1. Сколько времени в день вы проводите за гаджетами?</h3>
                 <div class="form-check"><input type="radio" name="q1" id="q1A" value="A"><label for="q1A">Менее 1 часа</label></div>
                 <div class="form-check"><input type="radio" name="q1" id="q1B" value="B"><label for="q1B">1-2 часа</label></div>
                 <div class="form-check"><input type="radio" name="q1" id="q1C" value="C"><label for="q1C">2-4 часа</label></div>
@@ -134,8 +148,9 @@
                 <div class="form-check"><input type="radio" name="q1" id="q1E" value="E"><label for="q1E">Более 6 часов</label></div>
             </div>
 
+            <!-- Вопрос 2 -->
             <div class="question" id="q2">
-                <h3 class="mb-3">2. Какие главные цели использования гаджетов для вас приоритетны?</h3>
+                <h3 class="mb-4">2. Какие главные цели использования гаджетов для вас приоритетны?</h3>
                 <div class="form-check"><input type="radio" name="q2" id="q2A" value="A"><label for="q2A">Обучение</label></div>
                 <div class="form-check"><input type="radio" name="q2" id="q2B" value="B"><label for="q2B">Связь (звонки, сообщения)</label></div>
                 <div class="form-check"><input type="radio" name="q2" id="q2C" value="C"><label for="q2C">Развлечения (игры, видео, музыка)</label></div>
@@ -143,8 +158,9 @@
                 <div class="form-check"><input type="radio" name="q2" id="q2E" value="E"><label for="q2E">Разное (социальные сети, чтение и т.д.)</label></div>
             </div>
 
+            <!-- Вопрос 3 -->
             <div class="question" id="q3">
-                <h3 class="mb-3">3. Какие отрицательные последствия от использования гаджетов вы наблюдаете в своей жизни?</h3>
+                <h3 class="mb-4">3. Какие отрицательные последствия от использования гаджетов вы наблюдаете?</h3>
                 <div class="form-check"><input type="radio" name="q3" id="q3A" value="A"><label for="q3A">Нет отрицательных последствий</label></div>
                 <div class="form-check"><input type="radio" name="q3" id="q3B" value="B"><label for="q3B">Проблемы с физическим здоровьем (усталость глаз, боли в шее и т.д.)</label></div>
                 <div class="form-check"><input type="radio" name="q3" id="q3C" value="C"><label for="q3C">Влияние на учебу (снижение успеваемости, отвлечение)</label></div>
@@ -152,8 +168,9 @@
                 <div class="form-check"><input type="radio" name="q3" id="q3E" value="E"><label for="q3E">Другие (сон, настроение и т.д.)</label></div>
             </div>
 
+            <!-- Вопрос 4 -->
             <div class="question" id="q4">
-                <h3 class="mb-3">4. Чувствовали ли вы когда-либо зависимость от гаджетов?</h3>
+                <h3 class="mb-4">4. Чувствовали ли вы когда-либо зависимость от гаджетов?</h3>
                 <div class="form-check"><input type="radio" name="q4" id="q4A" value="A"><label for="q4A">Нет</label></div>
                 <div class="form-check"><input type="radio" name="q4" id="q4B" value="B"><label for="q4B">Да, но редко</label></div>
                 <div class="form-check"><input type="radio" name="q4" id="q4C" value="C"><label for="q4C">Да, периодически</label></div>
@@ -161,8 +178,9 @@
                 <div class="form-check"><input type="radio" name="q4" id="q4E" value="E"><label for="q4E">Да, постоянно</label></div>
             </div>
 
+            <!-- Вопрос 5 -->
             <div class="question" id="q5">
-                <h3 class="mb-3">5. Ваше мнение: являются ли гаджеты необходимостью или источником зависимости в современном мире?</h3>
+                <h3 class="mb-4">5. Ваше мнение: являются ли гаджеты необходимостью или источником зависимости?</h3>
                 <div class="form-check"><input type="radio" name="q5" id="q5A" value="A"><label for="q5A">Исключительно необходимость</label></div>
                 <div class="form-check"><input type="radio" name="q5" id="q5B" value="B"><label for="q5B">В основном необходимость</label></div>
                 <div class="form-check"><input type="radio" name="q5" id="q5C" value="C"><label for="q5C">Оба варианта</label></div>
@@ -170,16 +188,16 @@
                 <div class="form-check"><input type="radio" name="q5" id="q5E" value="E"><label for="q5E">Исключительно источник зависимости</label></div>
             </div>
 
-            <button id="next" class="btn btn-primary w-100 mt-4 py-3 fw-bold">Далее →</button>
+            <button id="next" class="btn btn-primary w-100 mt-5 py-3 fw-bold fs-5">Далее →</button>
         </div>
 
         <!-- Результаты -->
-        <div id="result" class="result-card mt-5 p-4" style="display:none;">
-            <h2 class="text-center mb-4">Ваши результаты</h2>
+        <div id="result" class="result-card mt-5 p-5" style="display:none;">
+            <h2 class="text-center mb-5">Ваши результаты</h2>
 
-            <!-- Выпадающий блок "Ваши ответы + пояснения" -->
-            <div class="mb-4">
-                <button class="btn btn-outline-primary w-100 py-3 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#userAnswers">
+            <!-- Выпадающий блок с ответами + пояснениями -->
+            <div class="mb-5">
+                <button class="btn btn-outline-primary w-100 py-3 fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#userAnswers">
                     ▼ Ваши ответы и пояснения
                 </button>
                 <div id="userAnswers" class="collapse mt-3">
@@ -198,19 +216,19 @@
         let current = 0;
         const answers = {};
 
-        // Полные пояснения (как в твоём проекте)
+        // Полные пояснения
         const explanations = {
             q1: {
                 A: 'Менее 1 часа: Это показывает очень низкую зависимость. Гаджеты для вас — инструмент, а не привычка. Рекомендация: Продолжайте баланс, добавьте больше оффлайн-активностей.',
                 B: '1-2 часа: Умеренное использование. Полезно для необходимости, но следите за ростом времени.',
-                C: '2-4 часа: Средний уровень. Может быть баланс, но риск отвлечения.',
+                C: '2-4 часа: Средний уровень. Может быть баланс, но риск отвлечения (см. психологические аспекты в проекте).',
                 D: '4-6 часов: Высокий уровень. Возможны физиологические последствия, как усталость глаз.',
-                E: 'Более 6 часов: Высокая зависимость. Рекомендация: Введите перерывы.'
+                E: 'Более 6 часов: Высокая зависимость. Рекомендация: Введите перерывы, как в разделе 1.3 проекта.'
             },
             q2: {
                 A: 'Обучение: Положительный аспект — гаджеты как необходимость для образования.',
                 B: 'Связь: Ключевой плюс (коммуникация), но может привести к социальной зависимости.',
-                C: 'Развлечения: Риск зависимости от соцсетей и игр.',
+                C: 'Развлечения: Риск зависимости от соцсетей и игр (см. 1.2).',
                 D: 'Работа: Необходимость для продуктивности.',
                 E: 'Разное: Смешанно, следите за балансом.'
             },
@@ -231,23 +249,21 @@
             q5: {
                 A: 'Необходимость: Видите плюсы (образование, работа).',
                 B: 'В основном необходимость: Баланс с минусами.',
-                C: 'Оба: Реалистично.',
+                C: 'Оба: Реалистично — как в заключении проекта.',
                 D: 'В основном зависимость: Фокус на минусах.',
                 E: 'Зависимость: Нужны меры предосторожности.'
             }
         };
 
-        // Показ первого вопроса
         document.getElementById('q1').classList.add('active');
         document.getElementById('next').addEventListener('click', () => {
             const q = questions[current];
-            const selected = document.querySelector(`input[name="${q}"]:checked`);
-            if (!selected) return alert('Выберите вариант!');
+            const sel = document.querySelector(`input[name="${q}"]:checked`);
+            if (!sel) return alert('Выберите вариант!');
 
-            answers[q] = selected.value;
+            answers[q] = sel.value;
 
-            // Звёзды
-            const rect = selected.nextElementSibling.getBoundingClientRect();
+            const rect = sel.nextElementSibling.getBoundingClientRect();
             createExplosion(rect.left + rect.width/2, rect.top + rect.height/2);
 
             document.getElementById(q).classList.remove('active');
@@ -259,35 +275,33 @@
             }
         });
 
-        // Звёзды при выборе
         function createExplosion(x, y) {
-            const colors = document.body.dataset.theme === 'dark' ? ['#fff','#4dabf7','#ffd43b'] : ['#0d6efd','#212529','#6c757d'];
-            for (let i = 0; i < 18; i++) {
+            const colors = document.body.dataset.theme === 'dark' ? ['#fff','#60a5fa','#fbbf24'] : ['#0d6efd','#1e40af','#6b7280'];
+            for (let i = 0; i < 20; i++) {
                 const s = document.createElement('div');
                 s.className = 'star-particle';
                 s.textContent = '★';
                 s.style.left = x + 'px';
                 s.style.top = y + 'px';
                 s.style.color = colors[Math.floor(Math.random()*colors.length)];
-                const dx = (Math.random()-0.5)*220;
-                const dy = (Math.random()-0.5)*220;
+                const dx = (Math.random()-0.5)*260;
+                const dy = (Math.random()-0.5)*260;
                 s.style.setProperty('--dx', dx+'px');
                 s.style.setProperty('--dy', dy+'px');
                 document.body.appendChild(s);
-                setTimeout(() => s.remove(), 1000);
+                setTimeout(() => s.remove(), 1100);
             }
         }
 
-        // Звездопад при смене темы
         function createThemeRain() {
-            for (let i = 0; i < 72; i++) {
+            for (let i = 0; i < 80; i++) {
                 const s = document.createElement('div');
                 s.className = 'rain-star';
                 s.textContent = '★';
                 s.style.left = Math.random()*100 + 'vw';
-                s.style.animationDuration = (1.8 + Math.random()*0.6) + 's';
+                s.style.animationDuration = (2 + Math.random()*0.6) + 's';
                 document.body.appendChild(s);
-                setTimeout(() => s.remove(), 3000);
+                setTimeout(() => s.remove(), 3500);
             }
         }
 
@@ -298,63 +312,61 @@
             createThemeRain();
         });
 
-        // Результаты
         function showResults() {
             document.getElementById('quiz').style.display = 'none';
             document.getElementById('result').style.display = 'block';
 
-            // Блок "Ваши ответы + пояснения"
+            // Выпадающий блок с ответами + пояснениями
             let ansHTML = '';
             for (let q in answers) {
                 const label = document.querySelector(`#${q}${answers[q]} + label`).textContent;
                 const expl = explanations[q][answers[q]];
                 ansHTML += `
-                    <div class="list-group-item">
+                    <div class="list-group-item py-3">
                         <strong>Вопрос ${q.slice(1)}:</strong> ${label}<br>
-                        <small class="text-muted">${expl}</small>
+                        <small class="text-muted d-block mt-2">${expl}</small>
                     </div>`;
             }
             document.getElementById('answersList').innerHTML = ansHTML;
 
-            // Уровень зависимости (как в твоём примере)
+            // Уровень зависимости
             function getPoints(v) { return ['A','B','C','D','E'].indexOf(v); }
             let score = getPoints(answers.q1) + getPoints(answers.q3) + getPoints(answers.q4) + Math.floor(getPoints(answers.q5) * 0.5);
 
             let levelIndex = score < 3 ? 0 : score < 6 ? 1 : score < 9 ? 2 : score < 12 ? 3 : 4;
             const levels = [
-                'Очень низкая зависимость: Гаджеты для вас — чистая необходимость. Вы эффективно используете их для продуктивных целей без заметных негативных эффектов. Продолжайте поддерживать этот баланс.',
-                'Низкая зависимость: Вы хорошо контролируете время и цели использования гаджетов. Они служат инструментом для обучения, работы или связи, с минимальными минусами.',
-                'Умеренная зависимость: Есть хороший баланс, но иногда гаджеты отвлекают или вызывают легкий дискомфорт. Обратите внимание на потенциальные риски для здоровья или продуктивности.',
-                'Высокая зависимость: Гаджеты занимают много времени и могут влиять на здоровье, отношения или настроение. Рекомендуется активно работать над снижением использования.',
-                'Очень высокая зависимость: Зависимость заметна и может серьезно мешать жизни. Срочно внедряйте изменения, возможно, с профессиональной помощью.'
+                'Очень низкая зависимость: Гаджеты для вас — чистая необходимость. Вы эффективно используете их без негативных эффектов. Продолжайте в том же духе!',
+                'Низкая зависимость: Вы хорошо контролируете время. Гаджеты — полезный инструмент с минимальными минусами.',
+                'Умеренная зависимость: Баланс есть, но иногда отвлекают. Следите за здоровьем и продуктивностью.',
+                'Высокая зависимость: Гаджеты сильно влияют на жизнь. Рекомендуется активно снижать время использования.',
+                'Очень высокая зависимость: Зависимость серьёзная. Срочно меняйте привычки, возможно, нужна помощь специалиста.'
             ];
-            document.getElementById('overall').innerHTML = `<h3 class="mt-4">Общий вывод</h3><div class="alert alert-info fs-5">${levels[levelIndex]}</div>`;
+            document.getElementById('overall').innerHTML = `<h3 class="mt-5">Общий вывод</h3><div class="alert alert-info fs-5 p-4">${levels[levelIndex]}</div>`;
 
-            // Рекомендации (как в твоём примере)
+            // Рекомендации
             let recs = [];
             const q1p = getPoints(answers.q1);
             const q4p = getPoints(answers.q4);
             const q5p = getPoints(answers.q5);
 
-            if (q1p > 2) recs.push('Сократите общее время за гаджетами. Установите ежедневные лимиты с помощью приложений для контроля экранного времени.');
-            if (answers.q2 === 'A' || answers.q2 === 'D') recs.push('Продолжайте использовать гаджеты для продуктивных целей, но чередуйте с оффлайн-активностями для отдыха.');
-            if (answers.q2 === 'B') recs.push('Связь важна, но попробуйте заменить часть сообщений на личные встречи.');
-            if (answers.q2 === 'C') recs.push('Сократите время на развлечения. Замените их на хобби вроде спорта или чтения книг.');
-            if (answers.q2 === 'E') recs.push('Ваше смешанное использование требует баланса. Выделите время для полезных активностей.');
-            if (answers.q3 === 'A') recs.push('Отсутствие негативных последствий — это хорошо, но регулярно проверяйте самочувствие.');
-            if (answers.q3 === 'B') recs.push('Применяйте правило 20-20-20 и используйте фильтры синего света.');
-            if (answers.q3 === 'C') recs.push('Создайте зоны без гаджетов во время учёбы и используйте Pomodoro.');
-            if (answers.q3 === 'D') recs.push('Планируйте встречи без телефонов для укрепления отношений.');
-            if (answers.q3 === 'E') recs.push('Избегайте гаджетов за час до сна и практикуйте медитацию.');
-            if (q4p > 1) recs.push('Попробуйте цифровой детокс: один день в неделю без гаджетов.');
-            if (q5p > 2) recs.push('Переосмыслите роль гаджетов и установите строгие границы.');
-            if (levelIndex >= 3) recs.push('Если зависимость сильно влияет на жизнь — обратитесь к психологу.');
-            if (levelIndex <= 1) recs.push('Ваш низкий уровень — отличный пример. Поделитесь опытом с друзьями.');
+            if (q1p > 2) recs.push('Сократите общее время за гаджетами. Установите лимиты через встроенные функции телефона или приложения.');
+            if (answers.q2 === 'A' || answers.q2 === 'D') recs.push('Используйте гаджеты для продуктивности, но чередуйте с прогулками и спортом.');
+            if (answers.q2 === 'B') recs.push('Заменяйте часть переписок на живые разговоры — это укрепит отношения.');
+            if (answers.q2 === 'C') recs.push('Ограничьте развлечения. Замените скроллинг на книги, музыку или творчество.');
+            if (answers.q2 === 'E') recs.push('Составьте расписание: время для соцсетей, время для полезного контента.');
+            if (answers.q3 === 'B') recs.push('Правило 20-20-20 + ночной режим экрана + фильтры синего света.');
+            if (answers.q3 === 'C') recs.push('Pomodoro + режим "Не беспокоить" во время учёбы.');
+            if (answers.q3 === 'D') recs.push('Договоритесь с друзьями о встречах без телефонов.');
+            if (answers.q3 === 'E') recs.push('Нет гаджетов за 1 час до сна + дыхательные упражнения перед сном.');
+            if (q4p > 1) recs.push('Цифровой детокс: хотя бы 1 день в неделю полностью без экранов.');
+            if (q5p > 2) recs.push('Пересмотрите отношение к гаджетам — ставьте их на беззвучный режим чаще.');
+            if (levelIndex >= 3) recs.push('Если сложно справиться самостоятельно — обратитесь к психологу по зависимостям.');
+            if (levelIndex <= 1) recs.push('Ваш уровень — пример для других. Расскажите друзьям о своём подходе.');
 
-            if (recs.length === 0) recs.push('Продолжайте в том же духе! Ваш подход идеально сбалансирован.');
+            if (recs.length === 0) recs.push('Всё отлично! Продолжайте поддерживать здоровый баланс.');
 
-            let recHTML = '<h3 class="mt-4">Персонализированные рекомендации</h3><ul class="list-group">';
-            recs.forEach(r => recHTML += `<li class="list-group-item">${r}</li>`);
+            let recHTML = '<h3 class="mt-5">Рекомендации</h3><ul class="list-group">';
+            recs.forEach(r => recHTML += `<li class="list-group-item py-3">${r}</li>`);
             recHTML += '</ul>';
             document.getElementById('recommendations').innerHTML = recHTML;
         }
