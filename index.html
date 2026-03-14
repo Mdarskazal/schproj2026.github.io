@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест: Гаджеты — зависимость или необходимость?</title>
-    <!-- Bootstrap CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Google Fonts for better typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons для кнопки темы -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         body {
             padding: 20px;
             background-color: #f8f9fa;
-            font-family: 'Roboto', sans-serif;
+            transition: background-color 0.4s ease;
+        }
+        .quiz-card {
+            max-width: 800px;
+            margin: 0 auto;
         }
         .question {
             display: none;
@@ -26,74 +29,101 @@
             opacity: 1;
             transform: translateY(0);
         }
-        #result { display: none; }
-        .quiz-card {
-            max-width: 800px;
-            margin: 0 auto;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        #result {
+            display: none;
         }
-        .form-check { margin-bottom: 10px; }
-        #next { width: 100%; border-radius: 8px; }
-        h1, h2, h3 { font-weight: 700; }
-        .btn { transition: background-color 0.3s ease; }
 
-        /* Dark mode styles */
-        .dark-mode {
-            background-color: #121212;
-            color: #ffffff !important;
+        /* Красивые варианты ответов (овал/пилюля) */
+        .form-check {
+            background: #ffffff;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-        .dark-mode .card {
-            background-color: #1f1f1f;
-            border-color: #333;
-        }
-        .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode p, .dark-mode label {
-            color: #ffffff !important;
-        }
-        .dark-mode .alert-info {
-            background-color: #0c5460;
-            border-color: #117a8b;
-            color: #ffffff !important;
-        }
-        .dark-mode .alert-secondary {
-            background-color: #343a40;
-            border-color: #494f54;
-            color: #ffffff !important;
-        }
-        .dark-mode .alert-warning {
-            background-color: #856404;
-            border-color: #d39e00;
-            color: #ffffff !important;
-        }
-        .dark-mode .list-group-item {
-            background-color: #282828;
-            border-color: #333;
-            color: #ffffff !important;
-        }
-        .dark-mode .btn-primary {
-            background-color: #0d6efd;
+        .form-check:hover {
             border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
         }
-        .dark-mode .btn-secondary {
-            background-color: #495057;
+        .form-check:has(input:checked) {
+            border-color: #0d6efd;
+            background: #e7f1ff;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.25);
+        }
+        .form-check-input {
+            width: 20px;
+            height: 20px;
+        }
+        .form-check-label {
+            font-size: 1.05rem;
+            margin-left: 10px;
+        }
+
+        /* Темная тема */
+        [data-bs-theme="dark"] body {
+            background-color: #212529;
+            color: #dee2e6;
+        }
+        [data-bs-theme="dark"] .quiz-card,
+        [data-bs-theme="dark"] .form-check {
+            background: #343a40;
             border-color: #495057;
         }
-        .dark-mode .form-check-input {
-            background-color: #ffffff;
-            border-color: #ffffff;
+        [data-bs-theme="dark"] .form-check:hover {
+            border-color: #0d6efd;
+        }
+        [data-bs-theme="dark"] .form-check:has(input:checked) {
+            border-color: #0d6efd;
+            background: #1a2b4a;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.3);
+        }
+
+        /* Кнопка переключения темы */
+        #theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        #theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Адаптация под телефоны */
+        @media (max-width: 576px) {
+            #theme-toggle {
+                bottom: 15px;
+                right: 15px;
+                width: 48px;
+                height: 48px;
+                font-size: 1.4rem;
+            }
+            .quiz-card {
+                padding: 15px !important;
+            }
         }
     </style>
 </head>
-<body>
+<body data-bs-theme="light">
     <div class="container">
         <h1 class="text-center my-4">Тест: Гаджеты — зависимость или необходимость?</h1>
-        <p class="text-center">Ответьте на вопросы честно. Результаты останутся только у вас — сайт не собирает данные.</p>
-        <button id="toggle-dark" class="btn btn-secondary d-block mx-auto my-2">Тёмная тема</button>
+        <p class="text-center">Ответьте на вопросы честно. Результаты останутся только у вас.</p>
 
         <div id="quiz" class="quiz-card card p-4">
             <!-- Вопрос 1 -->
             <div class="question" id="q1">
-                <h3>1. Сколько времени в день вы проводите за гаджетами (смартфон, планшет, ноутбук и т.д.)?</h3>
+                <h3>1. Сколько времени в день вы проводите за гаджетами?</h3>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="q1" id="q1A" value="A">
                     <label class="form-check-label" for="q1A">Менее 1 часа</label>
@@ -216,38 +246,40 @@
                 </div>
             </div>
 
-            <button id="next" class="btn btn-primary mt-3">Далее</button>
+            <button id="next" class="btn btn-primary mt-3 w-100">Далее</button>
         </div>
 
         <div id="result" class="quiz-card card p-4 mt-4">
-            <h2 class="text-center">Ваши результаты</h2>
+            <h2 class="text-center mb-4">Ваши результаты</h2>
             <div id="explanations"></div>
-            <div id="overall"></div>
-            <div id="ai-recommendation"></div>
         </div>
     </div>
 
-    <!-- Bootstrap JS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <!-- JavaScript логика -->
+    <!-- Кнопка смены темы (полумесяц / солнышко) -->
+    <button id="theme-toggle" class="btn btn-outline-secondary">
+        <i class="bi bi-sun-fill"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
         let currentQuestion = 0;
         const answers = {};
 
-        // Шаблонные объяснения
+        // Обновлённые рекомендации без отсылок на проект
         const explanations = {
             q1: {
                 A: 'Менее 1 часа: Это показывает очень низкую зависимость. Гаджеты для вас — инструмент, а не привычка. Рекомендация: Продолжайте баланс, добавьте больше оффлайн-активностей.',
                 B: '1-2 часа: Умеренное использование. Полезно для необходимости, но следите за ростом времени.',
-                C: '2-4 часа: Средний уровень. Может быть баланс, но риск отвлечения (см. психологические аспекты в проекте).',
+                C: '2-4 часа: Средний уровень. Может быть баланс, но риск отвлечения.',
                 D: '4-6 часов: Высокий уровень. Возможны физиологические последствия, как усталость глаз.',
-                E: 'Более 6 часов: Высокая зависимость. Рекомендация: Введите перерывы, как в разделе 1.3 проекта.'
+                E: 'Более 6 часов: Высокая зависимость. Рекомендация: Введите перерывы.'
             },
             q2: {
                 A: 'Обучение: Положительный аспект — гаджеты как необходимость для образования.',
                 B: 'Связь: Ключевой плюс (коммуникация), но может привести к социальной зависимости.',
-                C: 'Развлечения: Риск зависимости от соцсетей и игр (см. 1.2).',
+                C: 'Развлечения: Риск зависимости от соцсетей и игр.',
                 D: 'Работа: Необходимость для продуктивности.',
                 E: 'Разное: Смешанно, следите за балансом.'
             },
@@ -268,7 +300,7 @@
             q5: {
                 A: 'Необходимость: Видите плюсы (образование, работа).',
                 B: 'В основном необходимость: Баланс с минусами.',
-                C: 'Оба: Реалистично — как в заключении проекта.',
+                C: 'Оба: Реалистично.',
                 D: 'В основном зависимость: Фокус на минусах.',
                 E: 'Зависимость: Нужны меры предосторожности.'
             }
@@ -276,6 +308,7 @@
 
         // Показ первого вопроса
         document.getElementById('q1').classList.add('active');
+
         const nextBtn = document.getElementById('next');
         nextBtn.addEventListener('click', () => {
             const currentQ = questions[currentQuestion];
@@ -295,75 +328,39 @@
             }
         });
 
-        // Темная тема toggle
-        const toggleBtn = document.getElementById('toggle-dark');
-        toggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            toggleBtn.textContent = document.body.classList.contains('dark-mode') ? 'Светлая тема' : 'Тёмная тема';
-        });
-
-        // Показ результатов
+        // Показ результатов (только шаблонные рекомендации)
         function showResults() {
             document.getElementById('quiz').style.display = 'none';
             document.getElementById('result').style.display = 'block';
 
-            let expText = '<h3>Пояснения к вашим ответам:</h3><ul class="list-group">';
+            let html = '<h3 class="mb-3">Анализ ваших ответов</h3><ul class="list-group">';
             for (let q in answers) {
-                expText += `<li class="list-group-item">Вопрос ${parseInt(q.slice(1))}: Ваш ответ — ${explanations[q][answers[q]].split(': ')[0]}. Это показывает, что ${explanations[q][answers[q]]}.</li>`;
+                html += `
+                    <li class="list-group-item">
+                        <strong>Вопрос ${parseInt(q.slice(1))}:</strong> 
+                        ${explanations[q][answers[q]]}
+                    </li>`;
             }
-            expText += '</ul>';
-            document.getElementById('explanations').innerHTML = expText;
-
-            // Вариативный общий вывод
-            function getPoints(value) {
-                return ['A', 'B', 'C', 'D', 'E'].indexOf(value);
-            }
-            let score = getPoints(answers.q1) + getPoints(answers.q3) + getPoints(answers.q4) + Math.floor(getPoints(answers.q5) * 0.5);
-
-            let levelIndex;
-            if (score < 3) levelIndex = 0;
-            else if (score < 6) levelIndex = 1;
-            else if (score < 9) levelIndex = 2;
-            else if (score < 12) levelIndex = 3;
-            else levelIndex = 4;
-
-            const levels = [
-                'Очень низкая зависимость: Гаджеты для вас — чистая необходимость. Вы эффективно используете их для продуктивных целей без заметных негативных эффектов. Продолжайте поддерживать этот баланс.',
-                'Низкая зависимость: Вы хорошо контролируете время и цели использования гаджетов. Они служат инструментом для обучения, работы или связи, с минимальными минусами.',
-                'Умеренная зависимость: Есть хороший баланс, но иногда гаджеты отвлекают или вызывают легкий дискомфорт. Обратите внимание на потенциальные риски для здоровья или продуктивности.',
-                'Высокая зависимость: Гаджеты занимают много времени и могут влиять на здоровье, отношения или настроение. Рекомендуется активно работать над снижением использования.',
-                'Очень высокая зависимость: Зависимость заметна и может серьезно мешать жизни. Срочно внедряйте изменения, возможно, с профессиональной помощью.'
-            ];
-            document.getElementById('overall').innerHTML = `<h3>Общий вывод:</h3><p class="alert alert-info">${levels[levelIndex]}</p>`;
-
-            // Вариативные рекомендации
-            let recs = [];
-            const q1Points = getPoints(answers.q1);
-            const q4Points = getPoints(answers.q4);
-            const q5Points = getPoints(answers.q5);
-
-            if (q1Points > 2) recs.push('Сократите общее время за гаджетами. Установите ежедневные лимиты с помощью приложений для контроля экранного времени.');
-            if (answers.q2 === 'A' || answers.q2 === 'D') recs.push('Продолжайте использовать гаджеты для продуктивных целей, как обучение или работа, но чередуйте с оффлайн-активностями для отдыха.');
-            if (answers.q2 === 'B') recs.push('Связь важна, но попробуйте заменить часть сообщений на личные встречи, чтобы укрепить отношения.');
-            if (answers.q2 === 'C') recs.push('Сократите время на развлечения, такие как игры и видео. Замените их на хобби вроде спорта или чтения книг для снижения риска зависимости.');
-            if (answers.q2 === 'E') recs.push('Ваше смешанное использование требует баланса. Выделите время специально для полезных активностей, чтобы избежать перетекания в прокрастинацию.');
-            if (answers.q3 === 'A') recs.push('Отсутствие негативных последствий — это хорошо, но регулярно проверяйте свое самочувствие, чтобы предотвратить скрытые проблемы.');
-            if (answers.q3 === 'B') recs.push('Для проблем с физическим здоровьем применяйте правило 20-20-20: каждые 20 минут смотрите на объект в 6 метрах на 20 секунд. Используйте синие светофильтры.');
-            if (answers.q3 === 'C') recs.push('Чтобы минимизировать влияние на учебу, создайте "зоны без гаджетов" во время занятий и используйте техники фокусировки, как Pomodoro.');
-            if (answers.q3 === 'D') recs.push('Улучшите социальные отношения, планируя встречи без телефонов. Это поможет восстановить эмоциональные связи в реальной жизни.');
-            if (answers.q3 === 'E') recs.push('Для проблем со сном или настроением избегайте гаджетов за час до сна и практикуйте медитацию для улучшения психического здоровья.');
-            if (q4Points > 1) recs.push('Поскольку вы чувствуете зависимость, попробуйте цифровой детокс: один день в неделю без гаджетов для психологического отдыха.');
-            if (q5Points > 2) recs.push('Ваше мнение склоняется к зависимости — переосмыслите роль гаджетов, фокусируясь на их полезных аспектах и устанавливая строгие границы.');
-            if (levelIndex >= 3) recs.push('Если зависимость сильно влияет на жизнь, не стесняйтесь обратиться к психологу или специалисту по зависимостям для профессиональной поддержки.');
-            if (levelIndex <= 1) recs.push('Ваш низкий уровень зависимости — отличный пример. Поделитесь своим опытом с друзьями, чтобы помочь им достичь баланса.');
-
-            if (recs.length === 0) recs.push('Продолжайте в том же духе! Ваш подход к гаджетам идеально сбалансирован.');
-
-            let recText = '<h3>Персонализированные рекомендации:</h3><ul class="list-group">';
-            recs.forEach(r => recText += `<li class="list-group-item">${r}</li>`);
-            recText += '</ul>';
-            document.getElementById('ai-recommendation').innerHTML = recText;
+            html += '</ul>';
+            document.getElementById('explanations').innerHTML = html;
         }
+
+        // === Переключение светлой/тёмной темы ===
+        const themeToggle = document.getElementById('theme-toggle');
+        let isDark = false;
+
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            const theme = isDark ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            
+            // Меняем иконку
+            themeToggle.innerHTML = isDark 
+                ? '<i class="bi bi-moon-fill"></i>' 
+                : '<i class="bi bi-sun-fill"></i>';
+        });
+
+        // Инициализация (по умолчанию светлая тема)
     </script>
 </body>
 </html>
