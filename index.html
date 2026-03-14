@@ -55,7 +55,7 @@
             color: var(--text);
         }
 
-        /* Радио-кнопки — больше пространства */
+        /* Радио-кнопки с увеличенным расстоянием */
         .form-check {
             margin-bottom: 18px;
         }
@@ -87,6 +87,7 @@
             background: var(--card-bg);
             border-color: var(--card-border);
             color: var(--text);
+            padding: 16px 24px;
         }
         .alert {
             border-radius: 14px;
@@ -95,32 +96,9 @@
             color: var(--text);
         }
 
-        /* Звёзды */
-        .star-particle {
-            position: absolute;
-            font-size: 16px;
-            pointer-events: none;
-            z-index: 9999;
-            animation: starExplode 0.9s forwards;
-        }
-        @keyframes starExplode {
-            0% { transform: scale(1) translate(0,0); opacity: 1; }
-            100% { transform: scale(0.2) translate(var(--dx), var(--dy)); opacity: 0; }
-        }
-
-        .rain-star {
-            position: fixed;
-            top: -180px; /* строго сверху, выше экрана */
-            font-size: 20px;
-            z-index: 99999;
-            pointer-events: none;
-            animation: themeRain 2.4s linear forwards;
-            color: var(--accent);
-        }
-        @keyframes themeRain {
-            0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
-            50%  { color: var(--text); }
-            100% { transform: translateY(calc(100vh + 200px)) rotate(480deg); opacity: 0; }
+        .collapse.show {
+            border-radius: 14px;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -138,7 +116,7 @@
 
     <div class="container pt-5 mt-5">
         <div id="quiz" class="quiz-card card p-5">
-            <!-- Вопросы -->
+            <!-- Вопрос 1 -->
             <div class="question active" id="q1">
                 <h3 class="mb-4">1. Сколько времени в день вы проводите за гаджетами?</h3>
                 <div class="form-check"><input type="radio" name="q1" id="q1A" value="A"><label for="q1A">Менее 1 часа</label></div>
@@ -195,7 +173,7 @@
         <div id="result" class="result-card mt-5 p-5" style="display:none;">
             <h2 class="text-center mb-5">Ваши результаты</h2>
 
-            <!-- Выпадающий блок с ответами + пояснениями -->
+            <!-- Выпадающий блок -->
             <div class="mb-5">
                 <button class="btn btn-outline-primary w-100 py-3 fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#userAnswers">
                     ▼ Ваши ответы и пояснения
@@ -216,7 +194,6 @@
         let current = 0;
         const answers = {};
 
-        // Полные пояснения
         const explanations = {
             q1: {
                 A: 'Менее 1 часа: Это показывает очень низкую зависимость. Гаджеты для вас — инструмент, а не привычка. Рекомендация: Продолжайте баланс, добавьте больше оффлайн-активностей.',
@@ -262,10 +239,6 @@
             if (!sel) return alert('Выберите вариант!');
 
             answers[q] = sel.value;
-
-            const rect = sel.nextElementSibling.getBoundingClientRect();
-            createExplosion(rect.left + rect.width/2, rect.top + rect.height/2);
-
             document.getElementById(q).classList.remove('active');
             current++;
             if (current < questions.length) {
@@ -275,48 +248,11 @@
             }
         });
 
-        function createExplosion(x, y) {
-            const colors = document.body.dataset.theme === 'dark' ? ['#fff','#60a5fa','#fbbf24'] : ['#0d6efd','#1e40af','#6b7280'];
-            for (let i = 0; i < 20; i++) {
-                const s = document.createElement('div');
-                s.className = 'star-particle';
-                s.textContent = '★';
-                s.style.left = x + 'px';
-                s.style.top = y + 'px';
-                s.style.color = colors[Math.floor(Math.random()*colors.length)];
-                const dx = (Math.random()-0.5)*260;
-                const dy = (Math.random()-0.5)*260;
-                s.style.setProperty('--dx', dx+'px');
-                s.style.setProperty('--dy', dy+'px');
-                document.body.appendChild(s);
-                setTimeout(() => s.remove(), 1100);
-            }
-        }
-
-        function createThemeRain() {
-            for (let i = 0; i < 80; i++) {
-                const s = document.createElement('div');
-                s.className = 'rain-star';
-                s.textContent = '★';
-                s.style.left = Math.random()*100 + 'vw';
-                s.style.animationDuration = (2 + Math.random()*0.6) + 's';
-                document.body.appendChild(s);
-                setTimeout(() => s.remove(), 3500);
-            }
-        }
-
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            const t = document.body.dataset.theme === 'light' ? 'dark' : 'light';
-            document.body.dataset.theme = t;
-            document.getElementById('themeToggle').textContent = t === 'dark' ? '🌙' : '☀️';
-            createThemeRain();
-        });
-
         function showResults() {
             document.getElementById('quiz').style.display = 'none';
             document.getElementById('result').style.display = 'block';
 
-            // Выпадающий блок с ответами + пояснениями
+            // Блок с ответами + пояснениями
             let ansHTML = '';
             for (let q in answers) {
                 const label = document.querySelector(`#${q}${answers[q]} + label`).textContent;
@@ -361,7 +297,7 @@
             if (q4p > 1) recs.push('Цифровой детокс: хотя бы 1 день в неделю полностью без экранов.');
             if (q5p > 2) recs.push('Пересмотрите отношение к гаджетам — ставьте их на беззвучный режим чаще.');
             if (levelIndex >= 3) recs.push('Если сложно справиться самостоятельно — обратитесь к психологу по зависимостям.');
-            if (levelIndex <= 1) recs.push('Ваш уровень — пример для других. Расскажите друзьям о своём подходе.');
+            if (levelIndex <= 1) recs.push('Ваш низкий уровень — пример для других. Расскажите друзьям о своём подходе.');
 
             if (recs.length === 0) recs.push('Всё отлично! Продолжайте поддерживать здоровый баланс.');
 
