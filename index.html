@@ -5,54 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест: Гаджеты — зависимость или необходимость?</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f8f9fa;
-            --text: #212529;
-            --card: #ffffff;
-            --accent: #0d6efd;
-            --border: #dee2e6;
+            --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --text: #fff;
+            --card-bg: rgba(255,255,255,0.95);
+            --accent: #ff6b6b;
         }
         [data-theme="dark"] {
-            --bg: #212529;
-            --text: #f8f9fa;
-            --card: #343a40;
-            --accent: #0d6efd;
-            --border: #495057;
+            --bg: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            --text: #e0e0e0;
+            --card-bg: rgba(30,30,30,0.92);
+            --accent: #ff8787;
         }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            transition: background-color 0.8s ease, color 0.8s ease;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+        body { background: var(--bg); background-attachment: fixed; }
+        .quiz-card, .result-card {
+            backdrop-filter: blur(10px);
+            border: none;
         }
 
         .navbar {
-            background-color: var(--card);
-            border-bottom: 1px solid var(--border);
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             transition: all 0.8s ease;
         }
 
         .quiz-card, .result-card {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            overflow: hidden;
         }
 
-        /* Радио-кнопки — акцентная обводка в обеих темах */
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Радио-кнопки */
         .form-check input[type="radio"] { display: none; }
         .form-check label {
             display: block;
             padding: 16px 20px;
             border-radius: 50px;
-            border: 2px solid var(--border);
-            background-color: var(--card);
+            border: 2px solid var(--card-border);
+            background-color: var(--card-bg);
             color: var(--text);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             cursor: pointer;
-            font-size: 1.05rem;
         }
         .form-check label:hover {
             background-color: rgba(13, 110, 253, 0.08);
@@ -61,22 +64,23 @@
         .form-check input:checked + label {
             border-color: var(--accent);
             background-color: rgba(13, 110, 253, 0.12);
-            box-shadow: 0 0 0 5px rgba(13, 110, 253, 0.2);
-            transform: scale(1.03);
-        }
-        [data-theme="dark"] .form-check label {
-            background-color: #2b3035;
-            color: #fff;
-            border-color: #495057;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
         }
         [data-theme="dark"] .form-check label:hover {
-            background-color: rgba(13, 110, 253, 0.15);
-        }
-        [data-theme="dark"] .form-check input:checked + label {
-            background-color: rgba(13, 110, 253, 0.25);
+            background-color: rgba(77, 171, 247, 0.15);
         }
 
-        /* Звёзды при выборе ответа */
+        /* Списки и алерты в тёмной теме */
+        .list-group-item {
+            background-color: var(--card-bg);
+            border-color: var(--card-border);
+            color: var(--text);
+        }
+        .alert {
+            border-radius: 12px;
+        }
+
+        /* Звёзды */
         .star-particle {
             position: absolute;
             font-size: 16px;
@@ -85,11 +89,10 @@
             animation: starExplode 0.9s forwards;
         }
         @keyframes starExplode {
-            0% { transform: scale(1) translate(0, 0); opacity: 1; }
+            0% { transform: scale(1) translate(0,0); opacity: 1; }
             100% { transform: scale(0.2) translate(var(--dx), var(--dy)); opacity: 0; }
         }
 
-        /* Звездопад с верхней стороны до низа */
         .rain-star {
             position: fixed;
             font-size: 18px;
@@ -104,15 +107,7 @@
             100% { transform: translateY(120vh) rotate(420deg); opacity: 0; }
         }
 
-        .question {
-            display: none;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        .question.active { display: block; opacity: 1; transform: translateY(0); }
-
-        #next { border-radius: 50px; padding: 14px 40px; font-weight: 600; }
+        .collapse.show { border-radius: 12px; overflow: hidden; }
     </style>
 </head>
 <body data-theme="light">
@@ -120,7 +115,7 @@
     <nav class="navbar fixed-top shadow-sm">
         <div class="container-fluid d-flex align-items-center">
             <div class="flex-grow-1"></div>
-            <h1 class="h4 mb-0 text-center fw-bold" style="font-size: 1.35rem;">Тест: Гаджеты — зависимость или необходимость?</h1>
+            <h1 class="h4 mb-0 text-center fw-bold">Тест: Гаджеты — зависимость или необходимость?</h1>
             <div class="flex-grow-1 d-flex justify-content-end">
                 <button id="themeToggle" class="btn btn-link text-decoration-none fs-3" aria-label="Сменить тему">☀️</button>
             </div>
@@ -129,9 +124,9 @@
 
     <div class="container pt-5 mt-5">
         <div id="quiz" class="quiz-card card p-4">
-            <!-- Вопрос 1 -->
+            <!-- Вопросы (все 5) -->
             <div class="question active" id="q1">
-                <h3 class="mb-3">1. Сколько времени в день вы проводите за гаджетами (смартфон, планшет, ноутбук и т.д.)?</h3>
+                <h3 class="mb-3">1. Сколько времени в день вы проводите за гаджетами?</h3>
                 <div class="form-check"><input type="radio" name="q1" id="q1A" value="A"><label for="q1A">Менее 1 часа</label></div>
                 <div class="form-check"><input type="radio" name="q1" id="q1B" value="B"><label for="q1B">1-2 часа</label></div>
                 <div class="form-check"><input type="radio" name="q1" id="q1C" value="C"><label for="q1C">2-4 часа</label></div>
@@ -139,9 +134,8 @@
                 <div class="form-check"><input type="radio" name="q1" id="q1E" value="E"><label for="q1E">Более 6 часов</label></div>
             </div>
 
-            <!-- Вопрос 2 -->
             <div class="question" id="q2">
-                <h3 class="mb-3">2. Какие главные цели/причины использования гаджетов для вас приоритетны?</h3>
+                <h3 class="mb-3">2. Какие главные цели использования гаджетов для вас приоритетны?</h3>
                 <div class="form-check"><input type="radio" name="q2" id="q2A" value="A"><label for="q2A">Обучение</label></div>
                 <div class="form-check"><input type="radio" name="q2" id="q2B" value="B"><label for="q2B">Связь (звонки, сообщения)</label></div>
                 <div class="form-check"><input type="radio" name="q2" id="q2C" value="C"><label for="q2C">Развлечения (игры, видео, музыка)</label></div>
@@ -149,7 +143,6 @@
                 <div class="form-check"><input type="radio" name="q2" id="q2E" value="E"><label for="q2E">Разное (социальные сети, чтение и т.д.)</label></div>
             </div>
 
-            <!-- Вопрос 3 -->
             <div class="question" id="q3">
                 <h3 class="mb-3">3. Какие отрицательные последствия от использования гаджетов вы наблюдаете в своей жизни?</h3>
                 <div class="form-check"><input type="radio" name="q3" id="q3A" value="A"><label for="q3A">Нет отрицательных последствий</label></div>
@@ -159,7 +152,6 @@
                 <div class="form-check"><input type="radio" name="q3" id="q3E" value="E"><label for="q3E">Другие (сон, настроение и т.д.)</label></div>
             </div>
 
-            <!-- Вопрос 4 -->
             <div class="question" id="q4">
                 <h3 class="mb-3">4. Чувствовали ли вы когда-либо зависимость от гаджетов?</h3>
                 <div class="form-check"><input type="radio" name="q4" id="q4A" value="A"><label for="q4A">Нет</label></div>
@@ -169,7 +161,6 @@
                 <div class="form-check"><input type="radio" name="q4" id="q4E" value="E"><label for="q4E">Да, постоянно</label></div>
             </div>
 
-            <!-- Вопрос 5 -->
             <div class="question" id="q5">
                 <h3 class="mb-3">5. Ваше мнение: являются ли гаджеты необходимостью или источником зависимости в современном мире?</h3>
                 <div class="form-check"><input type="radio" name="q5" id="q5A" value="A"><label for="q5A">Исключительно необходимость</label></div>
@@ -179,24 +170,23 @@
                 <div class="form-check"><input type="radio" name="q5" id="q5E" value="E"><label for="q5E">Исключительно источник зависимости</label></div>
             </div>
 
-            <button id="next" class="btn btn-primary w-100 mt-4">Далее →</button>
+            <button id="next" class="btn btn-primary w-100 mt-4 py-3 fw-bold">Далее →</button>
         </div>
 
         <!-- Результаты -->
-        <div id="result" class="result-card mt-4" style="display: none;">
+        <div id="result" class="result-card mt-5 p-4" style="display:none;">
             <h2 class="text-center mb-4">Ваши результаты</h2>
-            
-            <!-- Выпадающий блок "Ваши ответы" -->
+
+            <!-- Выпадающий блок "Ваши ответы + пояснения" -->
             <div class="mb-4">
-                <button class="btn btn-outline-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#userAnswers">
-                    ▼ Ваши ответы
+                <button class="btn btn-outline-primary w-100 py-3 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#userAnswers">
+                    ▼ Ваши ответы и пояснения
                 </button>
-                <div id="userAnswers" class="collapse mt-2">
+                <div id="userAnswers" class="collapse mt-3">
                     <div id="answersList" class="list-group"></div>
                 </div>
             </div>
 
-            <div id="explanations"></div>
             <div id="overall"></div>
             <div id="recommendations"></div>
         </div>
@@ -204,11 +194,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
-        let currentQuestion = 0;
+        const questions = ['q1','q2','q3','q4','q5'];
+        let current = 0;
         const answers = {};
 
-        // Полные объяснения
+        // Полные пояснения (как в твоём проекте)
         const explanations = {
             q1: {
                 A: 'Менее 1 часа: Это показывает очень низкую зависимость. Гаджеты для вас — инструмент, а не привычка. Рекомендация: Продолжайте баланс, добавьте больше оффлайн-активностей.',
@@ -249,102 +239,88 @@
 
         // Показ первого вопроса
         document.getElementById('q1').classList.add('active');
-        const nextBtn = document.getElementById('next');
-        nextBtn.addEventListener('click', () => {
-            const currentQ = questions[currentQuestion];
-            const selected = document.querySelector(`input[name="${currentQ}"]:checked`);
-            if (!selected) {
-                alert('Выберите ответ!');
-                return;
-            }
-            answers[currentQ] = selected.value;
+        document.getElementById('next').addEventListener('click', () => {
+            const q = questions[current];
+            const selected = document.querySelector(`input[name="${q}"]:checked`);
+            if (!selected) return alert('Выберите вариант!');
 
-            // Звёзды при выборе
-            const labelRect = selected.nextElementSibling.getBoundingClientRect();
-            createExplosion(labelRect.left + labelRect.width/2, labelRect.top + labelRect.height/2);
+            answers[q] = selected.value;
 
-            document.getElementById(currentQ).classList.remove('active');
-            currentQuestion++;
-            if (currentQuestion < questions.length) {
-                document.getElementById(questions[currentQuestion]).classList.add('active');
+            // Звёзды
+            const rect = selected.nextElementSibling.getBoundingClientRect();
+            createExplosion(rect.left + rect.width/2, rect.top + rect.height/2);
+
+            document.getElementById(q).classList.remove('active');
+            current++;
+            if (current < questions.length) {
+                document.getElementById(questions[current]).classList.add('active');
             } else {
                 showResults();
             }
         });
 
-        // Звёзды при выборе ответа
+        // Звёзды при выборе
         function createExplosion(x, y) {
-            const colors = document.body.dataset.theme === 'dark' ? ['#fff', '#0d6efd', '#ffc107'] : ['#0d6efd', '#212529', '#6c757d'];
+            const colors = document.body.dataset.theme === 'dark' ? ['#fff','#4dabf7','#ffd43b'] : ['#0d6efd','#212529','#6c757d'];
             for (let i = 0; i < 18; i++) {
-                const star = document.createElement('div');
-                star.className = 'star-particle';
-                star.textContent = '★';
-                star.style.left = `${x}px`;
-                star.style.top = `${y}px`;
-                star.style.color = colors[Math.floor(Math.random() * colors.length)];
-                const dx = (Math.random() - 0.5) * 220;
-                const dy = (Math.random() - 0.5) * 220;
-                star.style.setProperty('--dx', `${dx}px`);
-                star.style.setProperty('--dy', `${dy}px`);
-                document.body.appendChild(star);
-                setTimeout(() => star.remove(), 1000);
+                const s = document.createElement('div');
+                s.className = 'star-particle';
+                s.textContent = '★';
+                s.style.left = x + 'px';
+                s.style.top = y + 'px';
+                s.style.color = colors[Math.floor(Math.random()*colors.length)];
+                const dx = (Math.random()-0.5)*220;
+                const dy = (Math.random()-0.5)*220;
+                s.style.setProperty('--dx', dx+'px');
+                s.style.setProperty('--dy', dy+'px');
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 1000);
             }
         }
 
-        // Звездопад (с верхней стороны до низа)
+        // Звездопад при смене темы
         function createThemeRain() {
             for (let i = 0; i < 72; i++) {
-                const star = document.createElement('div');
-                star.className = 'rain-star';
-                star.textContent = '★';
-                star.style.left = `${Math.random() * 100}vw`;
-                star.style.animationDuration = `${1.8 + Math.random() * 0.6}s`;
-                document.body.appendChild(star);
-                setTimeout(() => star.remove(), 3000);
+                const s = document.createElement('div');
+                s.className = 'rain-star';
+                s.textContent = '★';
+                s.style.left = Math.random()*100 + 'vw';
+                s.style.animationDuration = (1.8 + Math.random()*0.6) + 's';
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 3000);
             }
         }
 
-        // Переключатель темы
-        const toggle = document.getElementById('themeToggle');
-        toggle.addEventListener('click', () => {
-            const newTheme = document.body.dataset.theme === 'light' ? 'dark' : 'light';
-            document.body.dataset.theme = newTheme;
-            toggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const t = document.body.dataset.theme === 'light' ? 'dark' : 'light';
+            document.body.dataset.theme = t;
+            document.getElementById('themeToggle').textContent = t === 'dark' ? '🌙' : '☀️';
             createThemeRain();
         });
 
-        // Показ результатов (полный уровень + рекомендации как в твоём коде)
+        // Результаты
         function showResults() {
             document.getElementById('quiz').style.display = 'none';
             document.getElementById('result').style.display = 'block';
 
-            // Выпадающий блок "Ваши ответы"
+            // Блок "Ваши ответы + пояснения"
             let ansHTML = '';
             for (let q in answers) {
-                const labelText = document.querySelector(`#${q}${answers[q]} + label`).textContent;
-                ansHTML += `<div class="list-group-item">Вопрос ${q.slice(1)}: ${labelText}</div>`;
+                const label = document.querySelector(`#${q}${answers[q]} + label`).textContent;
+                const expl = explanations[q][answers[q]];
+                ansHTML += `
+                    <div class="list-group-item">
+                        <strong>Вопрос ${q.slice(1)}:</strong> ${label}<br>
+                        <small class="text-muted">${expl}</small>
+                    </div>`;
             }
             document.getElementById('answersList').innerHTML = ansHTML;
 
-            // Пояснения
-            let expText = '<h3>Пояснения к вашим ответам:</h3><ul class="list-group">';
-            for (let q in answers) {
-                expText += `<li class="list-group-item">Вопрос ${parseInt(q.slice(1))}: ${explanations[q][answers[q]]}</li>`;
-            }
-            expText += '</ul>';
-            document.getElementById('explanations').innerHTML = expText;
-
-            // Уровень зависимости
+            // Уровень зависимости (как в твоём примере)
             function getPoints(v) { return ['A','B','C','D','E'].indexOf(v); }
             let score = getPoints(answers.q1) + getPoints(answers.q3) + getPoints(answers.q4) + Math.floor(getPoints(answers.q5) * 0.5);
 
-            let levelIndex;
-            if (score < 3) levelIndex = 0;
-            else if (score < 6) levelIndex = 1;
-            else if (score < 9) levelIndex = 2;
-            else if (score < 12) levelIndex = 3;
-            else levelIndex = 4;
-
+            let levelIndex = score < 3 ? 0 : score < 6 ? 1 : score < 9 ? 2 : score < 12 ? 3 : 4;
             const levels = [
                 'Очень низкая зависимость: Гаджеты для вас — чистая необходимость. Вы эффективно используете их для продуктивных целей без заметных негативных эффектов. Продолжайте поддерживать этот баланс.',
                 'Низкая зависимость: Вы хорошо контролируете время и цели использования гаджетов. Они служат инструментом для обучения, работы или связи, с минимальными минусами.',
@@ -352,35 +328,35 @@
                 'Высокая зависимость: Гаджеты занимают много времени и могут влиять на здоровье, отношения или настроение. Рекомендуется активно работать над снижением использования.',
                 'Очень высокая зависимость: Зависимость заметна и может серьезно мешать жизни. Срочно внедряйте изменения, возможно, с профессиональной помощью.'
             ];
-            document.getElementById('overall').innerHTML = `<h3 class="mt-4">Общий вывод</h3><div class="alert alert-info">${levels[levelIndex]}</div>`;
+            document.getElementById('overall').innerHTML = `<h3 class="mt-4">Общий вывод</h3><div class="alert alert-info fs-5">${levels[levelIndex]}</div>`;
 
-            // Персонализированные рекомендации
+            // Рекомендации (как в твоём примере)
             let recs = [];
-            const q1Points = getPoints(answers.q1);
-            const q4Points = getPoints(answers.q4);
-            const q5Points = getPoints(answers.q5);
+            const q1p = getPoints(answers.q1);
+            const q4p = getPoints(answers.q4);
+            const q5p = getPoints(answers.q5);
 
-            if (q1Points > 2) recs.push('Сократите общее время за гаджетами. Установите ежедневные лимиты с помощью приложений для контроля экранного времени.');
-            if (answers.q2 === 'A' || answers.q2 === 'D') recs.push('Продолжайте использовать гаджеты для продуктивных целей, как обучение или работа, но чередуйте с оффлайн-активностями для отдыха.');
-            if (answers.q2 === 'B') recs.push('Связь важна, но попробуйте заменить часть сообщений на личные встречи, чтобы укрепить отношения.');
-            if (answers.q2 === 'C') recs.push('Сократите время на развлечения, такие как игры и видео. Замените их на хобби вроде спорта или чтения книг для снижения риска зависимости.');
-            if (answers.q2 === 'E') recs.push('Ваше смешанное использование требует баланса. Выделите время специально для полезных активностей, чтобы избежать перетекания в прокрастинацию.');
-            if (answers.q3 === 'A') recs.push('Отсутствие негативных последствий — это хорошо, но регулярно проверяйте свое самочувствие, чтобы предотвратить скрытые проблемы.');
-            if (answers.q3 === 'B') recs.push('Для проблем с физическим здоровьем применяйте правило 20-20-20: каждые 20 минут смотрите на объект в 6 метрах на 20 секунд. Используйте синие светофильтры.');
-            if (answers.q3 === 'C') recs.push('Чтобы минимизировать влияние на учебу, создайте "зоны без гаджетов" во время занятий и используйте техники фокусировки.');
-            if (answers.q3 === 'D') recs.push('Улучшите социальные отношения, планируя встречи без телефонов. Это поможет восстановить эмоциональные связи в реальной жизни.');
-            if (answers.q3 === 'E') recs.push('Для проблем со сном или настроением избегайте гаджетов за час до сна и практикуйте медитацию для улучшения психического здоровья.');
-            if (q4Points > 1) recs.push('Поскольку вы чувствуете зависимость, попробуйте цифровой детокс: один день в неделю без гаджетов для психологического отдыха.');
-            if (q5Points > 2) recs.push('Ваше мнение склоняется к зависимости — переосмыслите роль гаджетов, фокусируясь на их полезных аспектах и устанавливая строгие границы.');
-            if (levelIndex >= 3) recs.push('Если зависимость сильно влияет на жизнь, не стесняйтесь обратиться к психологу или специалисту по зависимостям для профессиональной поддержки.');
-            if (levelIndex <= 1) recs.push('Ваш низкий уровень зависимости — отличный пример. Поделитесь своим опытом с друзьями, чтобы помочь им достичь баланса.');
+            if (q1p > 2) recs.push('Сократите общее время за гаджетами. Установите ежедневные лимиты с помощью приложений для контроля экранного времени.');
+            if (answers.q2 === 'A' || answers.q2 === 'D') recs.push('Продолжайте использовать гаджеты для продуктивных целей, но чередуйте с оффлайн-активностями для отдыха.');
+            if (answers.q2 === 'B') recs.push('Связь важна, но попробуйте заменить часть сообщений на личные встречи.');
+            if (answers.q2 === 'C') recs.push('Сократите время на развлечения. Замените их на хобби вроде спорта или чтения книг.');
+            if (answers.q2 === 'E') recs.push('Ваше смешанное использование требует баланса. Выделите время для полезных активностей.');
+            if (answers.q3 === 'A') recs.push('Отсутствие негативных последствий — это хорошо, но регулярно проверяйте самочувствие.');
+            if (answers.q3 === 'B') recs.push('Применяйте правило 20-20-20 и используйте фильтры синего света.');
+            if (answers.q3 === 'C') recs.push('Создайте зоны без гаджетов во время учёбы и используйте Pomodoro.');
+            if (answers.q3 === 'D') recs.push('Планируйте встречи без телефонов для укрепления отношений.');
+            if (answers.q3 === 'E') recs.push('Избегайте гаджетов за час до сна и практикуйте медитацию.');
+            if (q4p > 1) recs.push('Попробуйте цифровой детокс: один день в неделю без гаджетов.');
+            if (q5p > 2) recs.push('Переосмыслите роль гаджетов и установите строгие границы.');
+            if (levelIndex >= 3) recs.push('Если зависимость сильно влияет на жизнь — обратитесь к психологу.');
+            if (levelIndex <= 1) recs.push('Ваш низкий уровень — отличный пример. Поделитесь опытом с друзьями.');
 
-            if (recs.length === 0) recs.push('Продолжайте в том же духе! Ваш подход к гаджетам идеально сбалансирован.');
+            if (recs.length === 0) recs.push('Продолжайте в том же духе! Ваш подход идеально сбалансирован.');
 
-            let recText = '<h3 class="mt-4">Персонализированные рекомендации</h3><ul class="list-group">';
-            recs.forEach(r => recText += `<li class="list-group-item">${r}</li>`);
-            recText += '</ul>';
-            document.getElementById('recommendations').innerHTML = recText;
+            let recHTML = '<h3 class="mt-4">Персонализированные рекомендации</h3><ul class="list-group">';
+            recs.forEach(r => recHTML += `<li class="list-group-item">${r}</li>`);
+            recHTML += '</ul>';
+            document.getElementById('recommendations').innerHTML = recHTML;
         }
     </script>
 </body>
