@@ -4,24 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест: Гаджеты — зависимость или необходимость?</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons для кнопки темы -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
+        :root {
+            --bg: #f8f9fa;
+            --text: #212529;
+            --card: #ffffff;
+            --accent: #0d6efd;
+            --border: #dee2e6;
+        }
+        [data-theme="dark"] {
+            --bg: #212529;
+            --text: #f8f9fa;
+            --card: #343a40;
+            --accent: #0d6efd;
+            --border: #495057;
+        }
+
         body {
-            padding: 20px;
-            background-color: #f8f9fa;
-            transition: background-color 0.4s ease;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.4s ease, color 0.4s ease;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
+
+        .navbar {
+            background-color: var(--card);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.4s ease;
+        }
+
         .quiz-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
         }
+
+        /* Кастомные радио-кнопки — весь вариант обводится овальной рамкой */
+        .form-check {
+            margin-bottom: 12px;
+        }
+        .form-check input[type="radio"] {
+            display: none;
+        }
+        .form-check label {
+            display: block;
+            padding: 14px 18px;
+            border-radius: 50px; /* овальная/плавная форма */
+            border: 2px solid transparent;
+            background-color: var(--card);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            font-size: 1.05rem;
+        }
+        .form-check label:hover {
+            background-color: rgba(13, 110, 253, 0.08);
+        }
+        .form-check input:checked + label {
+            border-color: var(--accent);
+            background-color: rgba(13, 110, 253, 0.1);
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+            transform: scale(1.02);
+        }
+
+        /* Анимация звёзд при выборе варианта */
+        .star-particle {
+            position: absolute;
+            font-size: 14px;
+            color: var(--accent);
+            pointer-events: none;
+            z-index: 9999;
+            user-select: none;
+            animation: starExplode 0.8s forwards;
+        }
+        @keyframes starExplode {
+            0% { transform: scale(1) translate(0, 0); opacity: 1; }
+            100% { transform: scale(0.2) translate(var(--dx), var(--dy)); opacity: 0; }
+        }
+
+        /* Звездопад при смене темы */
+        .rain-star {
+            position: fixed;
+            font-size: 18px;
+            color: var(--text);
+            z-index: 99999;
+            pointer-events: none;
+            animation: themeRain 0.8s linear forwards;
+        }
+        @keyframes themeRain {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
+        }
+
         .question {
             display: none;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
         .question.active {
@@ -29,338 +112,205 @@
             opacity: 1;
             transform: translateY(0);
         }
-        #result {
-            display: none;
-        }
 
-        /* Красивые варианты ответов (овал/пилюля) */
-        .form-check {
-            background: #ffffff;
-            border: 2px solid #ddd;
+        #next {
             border-radius: 50px;
-            padding: 14px 18px;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .form-check:hover {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
-        }
-        .form-check:has(input:checked) {
-            border-color: #0d6efd;
-            background: #e7f1ff;
-            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.25);
-        }
-        .form-check-input {
-            width: 20px;
-            height: 20px;
-        }
-        .form-check-label {
-            font-size: 1.05rem;
-            margin-left: 10px;
+            padding: 12px 40px;
+            font-weight: 600;
         }
 
-        /* Темная тема */
-        [data-bs-theme="dark"] body {
-            background-color: #212529;
-            color: #dee2e6;
-        }
-        [data-bs-theme="dark"] .quiz-card,
-        [data-bs-theme="dark"] .form-check {
-            background: #343a40;
-            border-color: #495057;
-        }
-        [data-bs-theme="dark"] .form-check:hover {
-            border-color: #0d6efd;
-        }
-        [data-bs-theme="dark"] .form-check:has(input:checked) {
-            border-color: #0d6efd;
-            background: #1a2b4a;
-            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.3);
-        }
-
-        /* Кнопка переключения темы */
-        #theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-        #theme-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        /* Адаптация под телефоны */
-        @media (max-width: 576px) {
-            #theme-toggle {
-                bottom: 15px;
-                right: 15px;
-                width: 48px;
-                height: 48px;
-                font-size: 1.4rem;
-            }
-            .quiz-card {
-                padding: 15px !important;
-            }
+        .result-card {
+            background-color: var(--card);
+            border-radius: 20px;
+            padding: 30px;
         }
     </style>
 </head>
-<body data-bs-theme="light">
-    <div class="container">
-        <h1 class="text-center my-4">Тест: Гаджеты — зависимость или необходимость?</h1>
-        <p class="text-center">Ответьте на вопросы честно. Результаты останутся только у вас.</p>
+<body data-theme="light">
+    <!-- Шапка -->
+    <nav class="navbar fixed-top shadow-sm">
+        <div class="container-fluid d-flex align-items-center">
+            <div class="flex-grow-1"></div>
+            <h1 class="h4 mb-0 text-center fw-bold" style="font-size: 1.35rem;">Тест: Гаджеты — зависимость или необходимость?</h1>
+            <div class="flex-grow-1 d-flex justify-content-end">
+                <button id="themeToggle" class="btn btn-link text-decoration-none fs-3" aria-label="Сменить тему">
+                    ☀️
+                </button>
+            </div>
+        </div>
+    </nav>
 
+    <div class="container pt-5 mt-5">
         <div id="quiz" class="quiz-card card p-4">
-            <!-- Вопрос 1 -->
-            <div class="question" id="q1">
-                <h3>1. Сколько времени в день вы проводите за гаджетами?</h3>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q1" id="q1A" value="A">
-                    <label class="form-check-label" for="q1A">Менее 1 часа</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q1" id="q1B" value="B">
-                    <label class="form-check-label" for="q1B">1-2 часа</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q1" id="q1C" value="C">
-                    <label class="form-check-label" for="q1C">2-4 часа</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q1" id="q1D" value="D">
-                    <label class="form-check-label" for="q1D">4-6 часов</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q1" id="q1E" value="E">
-                    <label class="form-check-label" for="q1E">Более 6 часов</label>
-                </div>
+            <!-- Вопросы (те же 5) -->
+            <div class="question active" id="q1">
+                <h3 class="mb-3">1. Сколько времени в день вы проводите за гаджетами?</h3>
+                <div class="form-check"><input type="radio" name="q1" id="q1A" value="A"><label for="q1A">Менее 1 часа</label></div>
+                <div class="form-check"><input type="radio" name="q1" id="q1B" value="B"><label for="q1B">1-2 часа</label></div>
+                <div class="form-check"><input type="radio" name="q1" id="q1C" value="C"><label for="q1C">2-4 часа</label></div>
+                <div class="form-check"><input type="radio" name="q1" id="q1D" value="D"><label for="q1D">4-6 часов</label></div>
+                <div class="form-check"><input type="radio" name="q1" id="q1E" value="E"><label for="q1E">Более 6 часов</label></div>
             </div>
 
-            <!-- Вопрос 2 -->
             <div class="question" id="q2">
-                <h3>2. Какие главные цели/причины использования гаджетов для вас приоритетны?</h3>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q2" id="q2A" value="A">
-                    <label class="form-check-label" for="q2A">Обучение</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q2" id="q2B" value="B">
-                    <label class="form-check-label" for="q2B">Связь (звонки, сообщения)</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q2" id="q2C" value="C">
-                    <label class="form-check-label" for="q2C">Развлечения (игры, видео, музыка)</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q2" id="q2D" value="D">
-                    <label class="form-check-label" for="q2D">Работа</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q2" id="q2E" value="E">
-                    <label class="form-check-label" for="q2E">Разное (социальные сети, чтение и т.д.)</label>
-                </div>
+                <h3 class="mb-3">2. Какие главные цели использования гаджетов для вас приоритетны?</h3>
+                <div class="form-check"><input type="radio" name="q2" id="q2A" value="A"><label for="q2A">Обучение</label></div>
+                <div class="form-check"><input type="radio" name="q2" id="q2B" value="B"><label for="q2B">Связь (звонки, сообщения)</label></div>
+                <div class="form-check"><input type="radio" name="q2" id="q2C" value="C"><label for="q2C">Развлечения (игры, видео, музыка)</label></div>
+                <div class="form-check"><input type="radio" name="q2" id="q2D" value="D"><label for="q2D">Работа</label></div>
+                <div class="form-check"><input type="radio" name="q2" id="q2E" value="E"><label for="q2E">Разное (социальные сети и т.д.)</label></div>
             </div>
 
-            <!-- Вопрос 3 -->
             <div class="question" id="q3">
-                <h3>3. Какие отрицательные последствия от использования гаджетов вы наблюдаете в своей жизни?</h3>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q3" id="q3A" value="A">
-                    <label class="form-check-label" for="q3A">Нет отрицательных последствий</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q3" id="q3B" value="B">
-                    <label class="form-check-label" for="q3B">Проблемы с физическим здоровьем (усталость глаз, боли в шее и т.д.)</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q3" id="q3C" value="C">
-                    <label class="form-check-label" for="q3C">Влияние на учебу (снижение успеваемости, отвлечение)</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q3" id="q3D" value="D">
-                    <label class="form-check-label" for="q3D">Влияние на социальные отношения</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q3" id="q3E" value="E">
-                    <label class="form-check-label" for="q3E">Другие (сон, настроение и т.д.)</label>
-                </div>
+                <h3 class="mb-3">3. Какие отрицательные последствия вы наблюдаете?</h3>
+                <div class="form-check"><input type="radio" name="q3" id="q3A" value="A"><label for="q3A">Нет отрицательных последствий</label></div>
+                <div class="form-check"><input type="radio" name="q3" id="q3B" value="B"><label for="q3B">Проблемы со здоровьем (глаза, шея)</label></div>
+                <div class="form-check"><input type="radio" name="q3" id="q3C" value="C"><label for="q3C">Влияние на учёбу</label></div>
+                <div class="form-check"><input type="radio" name="q3" id="q3D" value="D"><label for="q3D">Влияние на отношения</label></div>
+                <div class="form-check"><input type="radio" name="q3" id="q3E" value="E"><label for="q3E">Другие (сон, настроение)</label></div>
             </div>
 
-            <!-- Вопрос 4 -->
             <div class="question" id="q4">
-                <h3>4. Чувствовали ли вы когда-либо зависимость от гаджетов?</h3>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q4" id="q4A" value="A">
-                    <label class="form-check-label" for="q4A">Нет</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q4" id="q4B" value="B">
-                    <label class="form-check-label" for="q4B">Да, но редко</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q4" id="q4C" value="C">
-                    <label class="form-check-label" for="q4C">Да, периодически</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q4" id="q4D" value="D">
-                    <label class="form-check-label" for="q4D">Да, часто</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q4" id="q4E" value="E">
-                    <label class="form-check-label" for="q4E">Да, постоянно</label>
-                </div>
+                <h3 class="mb-3">4. Чувствовали ли зависимость от гаджетов?</h3>
+                <div class="form-check"><input type="radio" name="q4" id="q4A" value="A"><label for="q4A">Нет</label></div>
+                <div class="form-check"><input type="radio" name="q4" id="q4B" value="B"><label for="q4B">Да, но редко</label></div>
+                <div class="form-check"><input type="radio" name="q4" id="q4C" value="C"><label for="q4C">Да, периодически</label></div>
+                <div class="form-check"><input type="radio" name="q4" id="q4D" value="D"><label for="q4D">Да, часто</label></div>
+                <div class="form-check"><input type="radio" name="q4" id="q4E" value="E"><label for="q4E">Да, постоянно</label></div>
             </div>
 
-            <!-- Вопрос 5 -->
             <div class="question" id="q5">
-                <h3>5. Ваше мнение: являются ли гаджеты необходимостью или источником зависимости в современном мире?</h3>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q5" id="q5A" value="A">
-                    <label class="form-check-label" for="q5A">Исключительно необходимость</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q5" id="q5B" value="B">
-                    <label class="form-check-label" for="q5B">В основном необходимость</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q5" id="q5C" value="C">
-                    <label class="form-check-label" for="q5C">Оба варианта</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q5" id="q5D" value="D">
-                    <label class="form-check-label" for="q5D">В основном зависимость</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q5" id="q5E" value="E">
-                    <label class="form-check-label" for="q5E">Исключительно источник зависимости</label>
-                </div>
+                <h3 class="mb-3">5. Гаджеты — это необходимость или зависимость?</h3>
+                <div class="form-check"><input type="radio" name="q5" id="q5A" value="A"><label for="q5A">Исключительно необходимость</label></div>
+                <div class="form-check"><input type="radio" name="q5" id="q5B" value="B"><label for="q5B">В основном необходимость</label></div>
+                <div class="form-check"><input type="radio" name="q5" id="q5C" value="C"><label for="q5C">Оба варианта</label></div>
+                <div class="form-check"><input type="radio" name="q5" id="q5D" value="D"><label for="q5D">В основном зависимость</label></div>
+                <div class="form-check"><input type="radio" name="q5" id="q5E" value="E"><label for="q5E">Исключительно источник зависимости</label></div>
             </div>
 
-            <button id="next" class="btn btn-primary mt-3 w-100">Далее</button>
+            <button id="next" class="btn btn-primary w-100 mt-4">Далее →</button>
         </div>
 
-        <div id="result" class="quiz-card card p-4 mt-4">
+        <!-- Результаты -->
+        <div id="result" class="result-card mt-4" style="display: none;">
             <h2 class="text-center mb-4">Ваши результаты</h2>
             <div id="explanations"></div>
+            <div id="overall" class="mt-4"></div>
         </div>
     </div>
 
-    <!-- Кнопка смены темы (полумесяц / солнышко) -->
-    <button id="theme-toggle" class="btn btn-outline-secondary">
-        <i class="bi bi-sun-fill"></i>
-    </button>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
-        let currentQuestion = 0;
+        const questions = ['q1','q2','q3','q4','q5'];
+        let current = 0;
         const answers = {};
 
-        // Обновлённые рекомендации без отсылок на проект
+        // Шаблонные объяснения + уровни
         const explanations = {
-            q1: {
-                A: 'Менее 1 часа: Это показывает очень низкую зависимость. Гаджеты для вас — инструмент, а не привычка. Рекомендация: Продолжайте баланс, добавьте больше оффлайн-активностей.',
-                B: '1-2 часа: Умеренное использование. Полезно для необходимости, но следите за ростом времени.',
-                C: '2-4 часа: Средний уровень. Может быть баланс, но риск отвлечения.',
-                D: '4-6 часов: Высокий уровень. Возможны физиологические последствия, как усталость глаз.',
-                E: 'Более 6 часов: Высокая зависимость. Рекомендация: Введите перерывы.'
-            },
-            q2: {
-                A: 'Обучение: Положительный аспект — гаджеты как необходимость для образования.',
-                B: 'Связь: Ключевой плюс (коммуникация), но может привести к социальной зависимости.',
-                C: 'Развлечения: Риск зависимости от соцсетей и игр.',
-                D: 'Работа: Необходимость для продуктивности.',
-                E: 'Разное: Смешанно, следите за балансом.'
-            },
-            q3: {
-                A: 'Нет: Оптимистично, но проверьте скрытые эффекты (сон, внимание).',
-                B: 'Здоровье: Физиологические минусы (глаза, шея) — используйте фильтры света.',
-                C: 'Учеба: Влияет на когнитивные функции — делайте перерывы.',
-                D: 'Отношения: Социальный минус — больше реального общения.',
-                E: 'Другие: Общие проблемы, как настроение — мониторьте.'
-            },
-            q4: {
-                A: 'Нет: Низкая зависимость.',
-                B: 'Редко: Начало — контролируйте.',
-                C: 'Периодически: Средняя — рекомендации по балансу.',
-                D: 'Часто: Высокая — риск психологических аспектов.',
-                E: 'Постоянно: Критично — обратитесь за помощью.'
-            },
-            q5: {
-                A: 'Необходимость: Видите плюсы (образование, работа).',
-                B: 'В основном необходимость: Баланс с минусами.',
-                C: 'Оба: Реалистично.',
-                D: 'В основном зависимость: Фокус на минусах.',
-                E: 'Зависимость: Нужны меры предосторожности.'
-            }
+            q1: {A:"Низкий уровень использования — гаджеты для вас инструмент.", B:"Умеренное время — хороший баланс.", C:"Средний уровень, но уже есть риск отвлечения.", D:"Высокий уровень — возможна усталость глаз и шеи.", E:"Очень высокий уровень — сильная зависимость."},
+            q2: {A:"Позитивно — образование.", B:"Коммуникация — плюс.", C:"Развлечения — риск зависимости.", D:"Работа — необходимость.", E:"Смешанное использование."},
+            q3: {A:"Отлично — нет проблем.", B:"Обратите внимание на глаза и осанку.", C:"Учеба страдает — нужны перерывы.", D:"Отношения страдают — больше живого общения.", E:"Сон и настроение — важный сигнал."},
+            q4: {A:"Нет зависимости — супер!", B:"Начало — легко контролировать.", C:"Периодически — следите.", D:"Часто — пора менять привычки.", E:"Постоянно — нужна серьёзная работа."},
+            q5: {A:"Полностью необходимость.", B:"В основном польза.", C:"Реалистичный взгляд.", D:"Больше зависимости.", E:"Чистая зависимость."}
         };
 
-        // Показ первого вопроса
-        document.getElementById('q1').classList.add('active');
+        // Уровень зависимости
+        function getLevel() {
+            let score = ['A','B','C','D','E'].indexOf(answers.q1) + ['A','B','C','D','E'].indexOf(answers.q4);
+            if (score <= 3) return {text: "Низкая зависимость — гаджеты для вас инструмент", color: "success"};
+            if (score <= 6) return {text: "Средняя зависимость — нужен баланс", color: "warning"};
+            return {text: "Высокая зависимость — время менять привычки", color: "danger"};
+        }
 
-        const nextBtn = document.getElementById('next');
-        nextBtn.addEventListener('click', () => {
-            const currentQ = questions[currentQuestion];
-            const selected = document.querySelector(`input[name="${currentQ}"]:checked`);
-            if (!selected) {
-                alert('Выберите ответ!');
-                return;
+        // Создание звёзд при выборе ответа
+        function createExplosion(x, y) {
+            const colors = document.body.dataset.theme === 'dark' ? ['#fff', '#0d6efd', '#ffc107'] : ['#0d6efd', '#212529', '#6c757d'];
+            for (let i = 0; i < 12; i++) {
+                const star = document.createElement('div');
+                star.className = 'star-particle';
+                star.textContent = '★';
+                star.style.left = `${x}px`;
+                star.style.top = `${y}px`;
+                star.style.color = colors[Math.floor(Math.random()*colors.length)];
+                const dx = (Math.random() - 0.5) * 180;
+                const dy = (Math.random() - 0.5) * 180;
+                star.style.setProperty('--dx', `${dx}px`);
+                star.style.setProperty('--dy', `${dy}px`);
+                document.body.appendChild(star);
+                setTimeout(() => star.remove(), 900);
             }
-            answers[currentQ] = selected.value;
-            document.getElementById(currentQ).classList.remove('active');
+        }
 
-            currentQuestion++;
-            if (currentQuestion < questions.length) {
-                document.getElementById(questions[currentQuestion]).classList.add('active');
+        // Звездопад при смене темы
+        function createThemeRain() {
+            const isDark = document.body.dataset.theme === 'dark';
+            const color = isDark ? '#fff' : '#212529';
+            for (let i = 0; i < 35; i++) {
+                const star = document.createElement('div');
+                star.className = 'rain-star';
+                star.textContent = '★';
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.color = color;
+                star.style.animationDuration = `${0.6 + Math.random() * 0.4}s`;
+                star.style.fontSize = `${12 + Math.random() * 14}px`;
+                document.body.appendChild(star);
+                setTimeout(() => star.remove(), 1200);
+            }
+        }
+
+        // Переключатель темы
+        const toggle = document.getElementById('themeToggle');
+        toggle.addEventListener('click', () => {
+            const currentTheme = document.body.dataset.theme;
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.dataset.theme = newTheme;
+            toggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+
+            // Звездопад
+            createThemeRain();
+        });
+
+        // Логика теста
+        document.getElementById('q1').classList.add('active');
+        document.getElementById('next').addEventListener('click', () => {
+            const currentQ = questions[current];
+            const selected = document.querySelector(`input[name="${currentQ}"]:checked`);
+            if (!selected) return alert('Выберите вариант!');
+
+            answers[currentQ] = selected.value;
+
+            // Звёзды при выборе
+            const label = selected.nextElementSibling;
+            const rect = label.getBoundingClientRect();
+            createExplosion(rect.left + rect.width/2, rect.top + rect.height/2);
+
+            document.getElementById(currentQ).classList.remove('active');
+            current++;
+            if (current < questions.length) {
+                document.getElementById(questions[current]).classList.add('active');
             } else {
                 showResults();
             }
         });
 
-        // Показ результатов (только шаблонные рекомендации)
         function showResults() {
             document.getElementById('quiz').style.display = 'none';
-            document.getElementById('result').style.display = 'block';
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
 
-            let html = '<h3 class="mb-3">Анализ ваших ответов</h3><ul class="list-group">';
+            let html = '<h4 class="mb-3">Разбор по вопросам:</h4><ul class="list-group">';
             for (let q in answers) {
-                html += `
-                    <li class="list-group-item">
-                        <strong>Вопрос ${parseInt(q.slice(1))}:</strong> 
-                        ${explanations[q][answers[q]]}
-                    </li>`;
+                html += `<li class="list-group-item">${q.toUpperCase()}: ${explanations[q][answers[q]]}</li>`;
             }
             html += '</ul>';
+
+            const level = getLevel();
+            html += `<div class="alert alert-${level.color} mt-4"><strong>Уровень зависимости:</strong> ${level.text}</div>`;
+
             document.getElementById('explanations').innerHTML = html;
         }
 
-        // === Переключение светлой/тёмной темы ===
-        const themeToggle = document.getElementById('theme-toggle');
-        let isDark = false;
-
-        themeToggle.addEventListener('click', () => {
-            isDark = !isDark;
-            const theme = isDark ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-bs-theme', theme);
-            
-            // Меняем иконку
-            themeToggle.innerHTML = isDark 
-                ? '<i class="bi bi-moon-fill"></i>' 
-                : '<i class="bi bi-sun-fill"></i>';
-        });
-
-        // Инициализация (по умолчанию светлая тема)
+        // Адаптация для телефонов уже есть благодаря Bootstrap + viewport
     </script>
 </body>
 </html>
