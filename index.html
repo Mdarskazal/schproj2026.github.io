@@ -13,7 +13,9 @@
             --card-bg: rgba(255,255,255,0.97);
             --card-border: rgba(100,150,255,0.2);
             --accent: #4d7cff;
+            --muted: #6b7280;
             --navbar-bg: rgba(255,255,255,0.95);
+            --transition: all 0.8s ease;
         }
         [data-theme="dark"] {
             --bg: #0f172a;
@@ -21,15 +23,16 @@
             --card-bg: rgba(30,41,59,0.92);
             --card-border: rgba(100,150,255,0.3);
             --accent: #60a5fa;
+            --muted: #94a3b8;
             --navbar-bg: rgba(15,23,42,0.95);
         }
 
         body {
             background: var(--bg);
             color: var(--text);
+            transition: var(--transition);
             font-family: 'Roboto', sans-serif;
             min-height: 100vh;
-            transition: background 0.8s ease, color 0.8s ease;
         }
 
         .navbar {
@@ -37,6 +40,7 @@
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--card-border);
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: var(--transition);
         }
 
         .quiz-card, .result-card {
@@ -45,6 +49,17 @@
             border: 1px solid var(--card-border);
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            transition: var(--transition);
+        }
+
+        h1, h2, h3, h4, strong {
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        small.text-muted {
+            color: var(--muted) !important;
+            transition: var(--transition);
         }
 
         /* Радио-кнопки */
@@ -57,7 +72,7 @@
             border: 2px solid var(--card-border);
             background: var(--card-bg);
             color: var(--text);
-            transition: all 0.35s ease;
+            transition: var(--transition);
             cursor: pointer;
             font-size: 1.1rem;
         }
@@ -76,19 +91,20 @@
             background: var(--card-bg);
             border-color: var(--card-border);
             color: var(--text);
+            transition: var(--transition);
         }
         .alert {
             border-radius: 14px;
             background: rgba(77,124,255,0.08);
             border-color: var(--accent);
             color: var(--text);
+            transition: var(--transition);
         }
 
         .collapse.show { border-radius: 14px; overflow: hidden; }
     </style>
 </head>
 <body data-theme="light">
-    <!-- Шапка -->
     <nav class="navbar fixed-top shadow-sm">
         <div class="container-fluid d-flex align-items-center">
             <div class="flex-grow-1"></div>
@@ -101,7 +117,6 @@
 
     <div class="container pt-5 mt-5">
         <div id="quiz" class="quiz-card card p-5">
-            <!-- Вопросы -->
             <div class="question active" id="q1">
                 <h3 class="mb-4">1. Сколько времени в день вы проводите за гаджетами?</h3>
                 <div class="form-check"><input type="radio" name="q1" id="q1A" value="A"><label for="q1A">Менее 1 часа</label></div>
@@ -150,7 +165,6 @@
             <button id="next" class="btn btn-primary w-100 mt-5 py-3 fw-bold fs-5">Далее →</button>
         </div>
 
-        <!-- Результаты -->
         <div id="result" class="result-card mt-5 p-5" style="display:none;">
             <h2 class="text-center mb-5">Ваши результаты</h2>
 
@@ -175,11 +189,41 @@
         const answers = {};
 
         const explanations = {
-            q1: { A:'Менее 1 часа: Это показывает очень низкую зависимость...', B:'1-2 часа: Умеренное использование...', C:'2-4 часа: Средний уровень...', D:'4-6 часов: Высокий уровень...', E:'Более 6 часов: Высокая зависимость...' },
-            q2: { A:'Обучение: Положительный аспект...', B:'Связь: Ключевой плюс...', C:'Развлечения: Риск зависимости...', D:'Работа: Необходимость...', E:'Разное: Смешанно...' },
-            q3: { A:'Нет: Оптимистично...', B:'Здоровье: Физиологические минусы...', C:'Учеба: Влияет на когнитивные функции...', D:'Отношения: Социальный минус...', E:'Другие: Общие проблемы...' },
-            q4: { A:'Нет: Низкая зависимость.', B:'Редко: Начало — контролируйте.', C:'Периодически: Средняя...', D:'Часто: Высокая...', E:'Постоянно: Критично...' },
-            q5: { A:'Необходимость: Видите плюсы...', B:'В основном необходимость...', C:'Оба: Реалистично...', D:'В основном зависимость...', E:'Зависимость: Нужны меры...' }
+            q1: {
+                A: 'Менее 1 часа: Это показывает очень низкую зависимость. Гаджеты для вас — инструмент, а не привычка. Рекомендация: Продолжайте баланс, добавьте больше оффлайн-активностей.',
+                B: '1-2 часа: Умеренное использование. Полезно для необходимости, но следите за ростом времени.',
+                C: '2-4 часа: Средний уровень. Может быть баланс, но риск отвлечения.',
+                D: '4-6 часов: Высокий уровень. Возможны физиологические последствия, как усталость глаз.',
+                E: 'Более 6 часов: Высокая зависимость. Рекомендация: Введите перерывы.'
+            },
+            q2: {
+                A: 'Обучение: Положительный аспект — гаджеты как необходимость для образования.',
+                B: 'Связь: Ключевой плюс (коммуникация), но может привести к социальной зависимости.',
+                C: 'Развлечения: Риск зависимости от соцсетей и игр.',
+                D: 'Работа: Необходимость для продуктивности.',
+                E: 'Разное: Смешанно, следите за балансом.'
+            },
+            q3: {
+                A: 'Нет: Оптимистично, но проверьте скрытые эффекты (сон, внимание).',
+                B: 'Здоровье: Физиологические минусы (глаза, шея) — используйте фильтры света.',
+                C: 'Учеба: Влияет на когнитивные функции — делайте перерывы.',
+                D: 'Отношения: Социальный минус — больше реального общения.',
+                E: 'Другие: Общие проблемы, как настроение — мониторьте.'
+            },
+            q4: {
+                A: 'Нет: Низкая зависимость.',
+                B: 'Редко: Начало — контролируйте.',
+                C: 'Периодически: Средняя — рекомендации по балансу.',
+                D: 'Часто: Высокая — риск психологических аспектов.',
+                E: 'Постоянно: Критично — обратитесь за помощью.'
+            },
+            q5: {
+                A: 'Необходимость: Видите плюсы (образование, работа).',
+                B: 'В основном необходимость: Баланс с минусами.',
+                C: 'Оба: Реалистично.',
+                D: 'В основном зависимость: Фокус на минусах.',
+                E: 'Зависимость: Нужны меры предосторожности.'
+            }
         };
 
         document.getElementById('q1').classList.add('active');
@@ -206,37 +250,45 @@
             for (let q in answers) {
                 const label = document.querySelector(`#${q}${answers[q]} + label`).textContent;
                 const expl = explanations[q][answers[q]];
-                ansHTML += `<div class="list-group-item py-3"><strong>Вопрос ${q.slice(1)}:</strong> ${label}<br><small class="text-muted d-block mt-2">${expl}</small></div>`;
+                ansHTML += `
+                    <div class="list-group-item py-3">
+                        <strong>Вопрос ${q.slice(1)}:</strong> ${label}<br>
+                        <small class="text-muted d-block mt-2">${expl}</small>
+                    </div>`;
             }
             document.getElementById('answersList').innerHTML = ansHTML;
 
             function getPoints(v) { return ['A','B','C','D','E'].indexOf(v); }
-            let score = getPoints(answers.q1) + getPoints(answers.q3) + getPoints(answers.q4) + Math.floor(getPoints(answers.q5)*0.5);
-            let levelIndex = score < 3 ? 0 : score < 6 ? 1 : score < 9 ? 2 : score < 12 ? 3 : 4;
+            let score = getPoints(answers.q1) + getPoints(answers.q3) + getPoints(answers.q4) + Math.floor(getPoints(answers.q5) * 0.5);
 
+            let levelIndex = score < 3 ? 0 : score < 6 ? 1 : score < 9 ? 2 : score < 12 ? 3 : 4;
             const levels = [
-                'Очень низкая зависимость: Гаджеты для вас — чистая необходимость...',
-                'Низкая зависимость: Вы хорошо контролируете время...',
-                'Умеренная зависимость: Баланс есть, но иногда отвлекают...',
-                'Высокая зависимость: Гаджеты сильно влияют на жизнь...',
-                'Очень высокая зависимость: Зависимость серьёзная...'
+                'Очень низкая зависимость: Гаджеты для вас — чистая необходимость. Продолжайте в том же духе!',
+                'Низкая зависимость: Вы хорошо контролируете время. Гаджеты — полезный инструмент.',
+                'Умеренная зависимость: Баланс есть, но следите за здоровьем и продуктивностью.',
+                'Высокая зависимость: Рекомендуется активно снижать время использования.',
+                'Очень высокая зависимость: Зависимость серьёзная. Срочно меняйте привычки.'
             ];
             document.getElementById('overall').innerHTML = `<h3 class="mt-5">Общий вывод</h3><div class="alert alert-info fs-5 p-4">${levels[levelIndex]}</div>`;
 
             let recs = [];
+            const q1p = getPoints(answers.q1);
+            const q4p = getPoints(answers.q4);
+            const q5p = getPoints(answers.q5);
+
             if (q1p > 2) recs.push('Сократите общее время за гаджетами. Установите лимиты через встроенные функции телефона или приложения.');
             if (answers.q2 === 'A' || answers.q2 === 'D') recs.push('Используйте гаджеты для продуктивности, но чередуйте с прогулками и спортом.');
-            if (answers.q2 === 'B') recs.push('Заменяйте часть переписок на живые разговоры — это укрепит отношения.');
-            if (answers.q2 === 'C') recs.push('Ограничьте развлечения. Замените скроллинг на книги, музыку или творчество.');
+            if (answers.q2 === 'B') recs.push('Заменяйте часть переписок на живые разговоры.');
+            if (answers.q2 === 'C') recs.push('Ограничьте развлечения. Замените скроллинг на книги или творчество.');
             if (answers.q2 === 'E') recs.push('Составьте расписание: время для соцсетей, время для полезного контента.');
-            if (answers.q3 === 'B') recs.push('Правило 20-20-20 + ночной режим экрана + фильтры синего света.');
+            if (answers.q3 === 'B') recs.push('Правило 20-20-20 + ночной режим экрана.');
             if (answers.q3 === 'C') recs.push('Pomodoro + режим "Не беспокоить" во время учёбы.');
-            if (answers.q3 === 'D') recs.push('Договоритесь с друзьями о встречах без телефонов.');
-            if (answers.q3 === 'E') recs.push('Нет гаджетов за 1 час до сна + дыхательные упражнения перед сном.');
-            if (q4p > 1) recs.push('Цифровой детокс: хотя бы 1 день в неделю полностью без экранов.');
+            if (answers.q3 === 'D') recs.push('Договоритесь о встречах без телефонов.');
+            if (answers.q3 === 'E') recs.push('Нет гаджетов за 1 час до сна + дыхательные упражнения.');
+            if (q4p > 1) recs.push('Цифровой детокс: хотя бы 1 день в неделю без экранов.');
             if (q5p > 2) recs.push('Пересмотрите отношение к гаджетам — ставьте их на беззвучный режим чаще.');
-            if (levelIndex >= 3) recs.push('Если сложно справиться самостоятельно — обратитесь к психологу по зависимостям.');
-            if (levelIndex <= 1) recs.push('Ваш низкий уровень — пример для других. Расскажите друзьям о своём подходе.');
+            if (levelIndex >= 3) recs.push('Если сложно справиться самостоятельно — обратитесь к психологу.');
+            if (levelIndex <= 1) recs.push('Ваш низкий уровень — пример для других.');
 
             if (recs.length === 0) recs.push('Всё отлично! Продолжайте поддерживать здоровый баланс.');
 
@@ -246,7 +298,6 @@
             document.getElementById('recommendations').innerHTML = recHTML;
         }
 
-        // Переключатель темы (исправленный)
         document.getElementById('themeToggle').addEventListener('click', () => {
             const newTheme = document.body.dataset.theme === 'light' ? 'dark' : 'light';
             document.body.dataset.theme = newTheme;
