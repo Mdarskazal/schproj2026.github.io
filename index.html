@@ -57,14 +57,8 @@
             transition: var(--transition);
         }
 
-        small.text-muted {
-            color: var(--muted) !important;
-            transition: var(--transition);
-        }
-
-        /* Радио-кнопки */
         .form-check { margin-bottom: 18px; }
-        .form-check input[type="radio"] { display: none; }
+        .form-check input[type="radio"], .form-check input[type="checkbox"] { display: none; }
         .form-check label {
             display: block;
             padding: 18px 24px;
@@ -84,6 +78,10 @@
             border-color: var(--accent);
             background: rgba(77,124,255,0.12);
             box-shadow: 0 0 0 6px rgba(77,124,255,0.15);
+        }
+        .form-check input:disabled + label {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .list-group-item {
@@ -114,6 +112,8 @@
 
     <div class="container pt-5 mt-5">
         <div id="quiz" class="quiz-card card p-5">
+
+            <!-- Вопрос 1 (один вариант) -->
             <div class="question active" id="q1">
                 <h3 class="mb-4">1. Сколько времени в день вы проводите за гаджетами?</h3>
                 <div class="form-check"><input type="radio" name="q1" id="q1A" value="A"><label for="q1A">Менее 1 часа</label></div>
@@ -123,24 +123,27 @@
                 <div class="form-check"><input type="radio" name="q1" id="q1E" value="E"><label for="q1E">Более 6 часов</label></div>
             </div>
 
+            <!-- Вопрос 2 (несколько) -->
             <div class="question" id="q2">
-                <h3 class="mb-4">2. Какие главные цели использования гаджетов для вас приоритетны?</h3>
-                <div class="form-check"><input type="radio" name="q2" id="q2A" value="A"><label for="q2A">Обучение</label></div>
-                <div class="form-check"><input type="radio" name="q2" id="q2B" value="B"><label for="q2B">Связь (звонки, сообщения)</label></div>
-                <div class="form-check"><input type="radio" name="q2" id="q2C" value="C"><label for="q2C">Развлечения (игры, видео, музыка)</label></div>
-                <div class="form-check"><input type="radio" name="q2" id="q2D" value="D"><label for="q2D">Работа</label></div>
-                <div class="form-check"><input type="radio" name="q2" id="q2E" value="E"><label for="q2E">Разное (социальные сети, чтение и т.д.)</label></div>
+                <h3 class="mb-4">2. Какие главные цели использования гаджетов для вас приоритетны? (можно несколько)</h3>
+                <div class="form-check"><input type="checkbox" name="q2" id="q2A" value="A"><label for="q2A">Обучение</label></div>
+                <div class="form-check"><input type="checkbox" name="q2" id="q2B" value="B"><label for="q2B">Связь (звонки, сообщения)</label></div>
+                <div class="form-check"><input type="checkbox" name="q2" id="q2C" value="C"><label for="q2C">Развлечения (игры, видео, музыка)</label></div>
+                <div class="form-check"><input type="checkbox" name="q2" id="q2D" value="D"><label for="q2D">Работа</label></div>
+                <div class="form-check"><input type="checkbox" name="q2" id="q2E" value="E"><label for="q2E">Разное (социальные сети, чтение и т.д.)</label></div>
             </div>
 
+            <!-- Вопрос 3 (несколько + взаимоисключение) -->
             <div class="question" id="q3">
-                <h3 class="mb-4">3. Какие отрицательные последствия от использования гаджетов вы наблюдаете?</h3>
-                <div class="form-check"><input type="radio" name="q3" id="q3A" value="A"><label for="q3A">Нет отрицательных последствий</label></div>
-                <div class="form-check"><input type="radio" name="q3" id="q3B" value="B"><label for="q3B">Проблемы с физическим здоровьем (усталость глаз, боли в шее и т.д.)</label></div>
-                <div class="form-check"><input type="radio" name="q3" id="q3C" value="C"><label for="q3C">Влияние на учебу (снижение успеваемости, отвлечение)</label></div>
-                <div class="form-check"><input type="radio" name="q3" id="q3D" value="D"><label for="q3D">Влияние на социальные отношения</label></div>
-                <div class="form-check"><input type="radio" name="q3" id="q3E" value="E"><label for="q3E">Другие (сон, настроение и т.д.)</label></div>
+                <h3 class="mb-4">3. Какие отрицательные последствия вы наблюдаете? (можно несколько)</h3>
+                <div class="form-check"><input type="checkbox" name="q3" id="q3A" value="A"><label for="q3A">Нет отрицательных последствий</label></div>
+                <div class="form-check"><input type="checkbox" name="q3" id="q3B" value="B"><label for="q3B">Проблемы с физическим здоровьем (глаза, шея и т.д.)</label></div>
+                <div class="form-check"><input type="checkbox" name="q3" id="q3C" value="C"><label for="q3C">Влияние на учебу (снижение успеваемости, отвлечение)</label></div>
+                <div class="form-check"><input type="checkbox" name="q3" id="q3D" value="D"><label for="q3D">Влияние на социальные отношения</label></div>
+                <div class="form-check"><input type="checkbox" name="q3" id="q3E" value="E"><label for="q3E">Другие (сон, настроение и т.д.)</label></div>
             </div>
 
+            <!-- Вопрос 4 (один вариант) -->
             <div class="question" id="q4">
                 <h3 class="mb-4">4. Чувствовали ли вы когда-либо зависимость от гаджетов?</h3>
                 <div class="form-check"><input type="radio" name="q4" id="q4A" value="A"><label for="q4A">Нет</label></div>
@@ -150,6 +153,7 @@
                 <div class="form-check"><input type="radio" name="q4" id="q4E" value="E"><label for="q4E">Да, постоянно</label></div>
             </div>
 
+            <!-- Вопрос 5 (один вариант) -->
             <div class="question" id="q5">
                 <h3 class="mb-4">5. Ваше мнение: являются ли гаджеты необходимостью или источником зависимости?</h3>
                 <div class="form-check"><input type="radio" name="q5" id="q5A" value="A"><label for="q5A">Исключительно необходимость</label></div>
@@ -162,6 +166,7 @@
             <button id="next" class="btn btn-primary w-100 mt-5 py-3 fw-bold fs-5">Далее →</button>
         </div>
 
+        <!-- Результаты -->
         <div id="result" class="result-card mt-5 p-5" style="display:none;">
             <h2 class="text-center mb-5">Ваши результаты</h2>
 
@@ -185,7 +190,6 @@
         let current = 0;
         const answers = {};
 
-        // Улучшенные и оптимизированные пояснения
         const explanations = {
             q1: {
                 A: 'Менее 1 часа — очень низкая нагрузка. Гаджеты — просто инструмент. Продолжай в том же духе.',
@@ -195,42 +199,68 @@
                 E: 'Более 6 часов — сильная зависимость. Срочно вводи перерывы и лимиты.'
             },
             q2: {
-                A: 'Обучение — самый полезный сценарий. Продолжай, но не забывай отдыхать глазами.',
-                B: 'Связь — главное преимущество. Старайся иногда заменять чаты живыми встречами.',
-                C: 'Развлечения — самый рискованный вариант. Ограничивай время на игры и видео.',
-                D: 'Работа — оправданное использование. Главное — не растягивать на весь день.',
-                E: 'Смешанное использование — следи, чтобы польза не превращалась в прокрастинацию.'
+                A: 'Обучение — самый полезный сценарий.',
+                B: 'Связь — главное преимущество.',
+                C: 'Развлечения — самый рискованный вариант.',
+                D: 'Работа — оправданное использование.',
+                E: 'Смешанное использование — следи за балансом.'
             },
             q3: {
-                A: 'Нет последствий — отлично. Продолжай наблюдать за собой.',
-                B: 'Здоровье (глаза, шея) — используй правило 20-20-20 и фильтры синего света.',
-                C: 'Учёба страдает — включай режим фокуса и делай перерывы каждые 25–50 минут.',
-                D: 'Отношения ухудшаются — планируй встречи без телефонов хотя бы раз в неделю.',
-                E: 'Сон и настроение — убирай гаджеты за час до сна и добавь вечерний ритуал без экранов.'
+                A: 'Нет последствий — отлично.',
+                B: 'Здоровье — используй правило 20-20-20 и фильтры.',
+                C: 'Учёба страдает — включай Pomodoro.',
+                D: 'Отношения ухудшаются — планируй встречи без телефонов.',
+                E: 'Сон и настроение — убирай гаджеты за час до сна.'
             },
             q4: {
-                A: 'Зависимости нет — идеально. Поддерживай этот уровень.',
-                B: 'Редко — начало привыкания. Уже сейчас ставь осознанные границы.',
-                C: 'Периодически — средняя зависимость. Вводи таймеры и дни без гаджетов.',
-                D: 'Часто — высокая зависимость. Пора серьёзно сокращать экранное время.',
-                E: 'Постоянно — сильная зависимость. Нужны жёсткие меры и, возможно, помощь.'
+                A: 'Зависимости нет — идеально.',
+                B: 'Редко — начало привыкания. Уже сейчас ставь границы.',
+                C: 'Периодически — средняя зависимость.',
+                D: 'Часто — высокая зависимость.',
+                E: 'Постоянно — сильная зависимость.'
             },
             q5: {
-                A: 'Полностью необходимость — здоровое отношение. Продолжай так же.',
-                B: 'В основном необходимость — хороший баланс. Можно немного ужесточить правила.',
-                C: 'Оба варианта — реалистичный взгляд. Главное — не скатываться в минус.',
+                A: 'Полностью необходимость — здоровое отношение.',
+                B: 'В основном необходимость — хороший баланс.',
+                C: 'Оба варианта — реалистичный взгляд.',
                 D: 'В основном зависимость — пора перестраивать привычки.',
-                E: 'Чистая зависимость — срочно меняй подход к гаджетам.'
+                E: 'Чистая зависимость — срочно меняй подход.'
             }
         };
+
+        // Логика для вопроса 3 (взаимоисключение)
+        document.querySelectorAll('#q3 input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.id === 'q3A') {
+                    if (this.checked) {
+                        document.querySelectorAll('#q3 input[type="checkbox"]:not(#q3A)').forEach(el => {
+                            el.checked = false;
+                            el.disabled = true;
+                        });
+                    } else {
+                        document.querySelectorAll('#q3 input[type="checkbox"]:not(#q3A)').forEach(el => el.disabled = false);
+                    }
+                } else if (this.checked) {
+                    document.getElementById('q3A').checked = false;
+                }
+            });
+        });
 
         document.getElementById('q1').classList.add('active');
         document.getElementById('next').addEventListener('click', () => {
             const q = questions[current];
-            const sel = document.querySelector(`input[name="${q}"]:checked`);
-            if (!sel) return alert('Выберите вариант!');
+            let selected;
 
-            answers[q] = sel.value;
+            if (q === 'q2' || q === 'q3') {
+                selected = Array.from(document.querySelectorAll(`#${q} input:checked`)).map(i => i.value);
+                if (selected.length === 0) return alert('Выберите хотя бы один вариант!');
+                answers[q] = selected;
+            } else {
+                const sel = document.querySelector(`#${q} input:checked`);
+                if (!sel) return alert('Выберите вариант!');
+                answers[q] = sel.value;
+            }
+
             document.getElementById(q).classList.remove('active');
             current++;
             if (current < questions.length) {
@@ -244,23 +274,35 @@
             document.getElementById('quiz').style.display = 'none';
             document.getElementById('result').style.display = 'block';
 
-            // Выпадающий блок — вопрос + ответ + пояснение
             let ansHTML = '';
             for (let q in answers) {
                 const questionText = document.querySelector(`#${q} h3`).innerText.trim();
-                const answerText = document.querySelector(`#${q}${answers[q]} + label`).textContent.trim();
-                const expl = explanations[q][answers[q]];
+                let answerText = '';
+                let explText = '';
+
+                if (Array.isArray(answers[q])) {
+                    answers[q].forEach(val => {
+                        answerText += (answerText ? ', ' : '') + document.querySelector(`#${q}${val} + label`).textContent.trim();
+                        explText += (explText ? ' + ' : '') + explanations[q][val];
+                    });
+                } else {
+                    answerText = document.querySelector(`#${q}${answers[q]} + label`).textContent.trim();
+                    explText = explanations[q][answers[q]];
+                }
 
                 ansHTML += `
                     <div class="list-group-item py-3">
                         <strong>${questionText}</strong><br>
-                        ${answerText}: ${expl}
+                        ${answerText}: ${explText}
                     </div>`;
             }
             document.getElementById('answersList').innerHTML = ansHTML;
 
-            // Уровень зависимости
-            function getPoints(v) { return ['A','B','C','D','E'].indexOf(v); }
+            // Уровень зависимости и рекомендации
+            function getPoints(v) {
+                if (Array.isArray(v)) return Math.max(...v.map(val => ['A','B','C','D','E'].indexOf(val)));
+                return ['A','B','C','D','E'].indexOf(v);
+            }
             let score = getPoints(answers.q1) + getPoints(answers.q3) + getPoints(answers.q4) + Math.floor(getPoints(answers.q5) * 0.5);
 
             let levelIndex = score < 3 ? 0 : score < 6 ? 1 : score < 9 ? 2 : score < 12 ? 3 : 4;
@@ -273,21 +315,20 @@
             ];
             document.getElementById('overall').innerHTML = `<h3 class="mt-5">Общий вывод</h3><div class="alert alert-info fs-5 p-4">${levels[levelIndex]}</div>`;
 
-            // Рекомендации
             let recs = [];
             const q1p = getPoints(answers.q1);
             const q4p = getPoints(answers.q4);
             const q5p = getPoints(answers.q5);
 
             if (q1p > 2) recs.push('Сократите общее время за гаджетами. Установите лимиты через встроенные функции телефона или приложения.');
-            if (answers.q2 === 'A' || answers.q2 === 'D') recs.push('Используйте гаджеты для продуктивности, но чередуйте с прогулками и спортом.');
-            if (answers.q2 === 'B') recs.push('Заменяйте часть переписок на живые разговоры.');
-            if (answers.q2 === 'C') recs.push('Ограничьте развлечения. Замените скроллинг на книги или творчество.');
-            if (answers.q2 === 'E') recs.push('Составьте расписание: время для соцсетей, время для полезного контента.');
-            if (answers.q3 === 'B') recs.push('Правило 20-20-20 + ночной режим экрана.');
-            if (answers.q3 === 'C') recs.push('Pomodoro + режим "Не беспокоить" во время учёбы.');
-            if (answers.q3 === 'D') recs.push('Договоритесь о встречах без телефонов.');
-            if (answers.q3 === 'E') recs.push('Нет гаджетов за 1 час до сна + дыхательные упражнения.');
+            if (answers.q2 && answers.q2.includes('A') || answers.q2 && answers.q2.includes('D')) recs.push('Используйте гаджеты для продуктивности, но чередуйте с прогулками и спортом.');
+            if (answers.q2 && answers.q2.includes('B')) recs.push('Заменяйте часть переписок на живые разговоры.');
+            if (answers.q2 && answers.q2.includes('C')) recs.push('Ограничьте развлечения. Замените скроллинг на книги или творчество.');
+            if (answers.q2 && answers.q2.includes('E')) recs.push('Составьте расписание: время для соцсетей, время для полезного контента.');
+            if (answers.q3 && answers.q3.includes('B')) recs.push('Правило 20-20-20 + ночной режим экрана.');
+            if (answers.q3 && answers.q3.includes('C')) recs.push('Pomodoro + режим "Не беспокоить" во время учёбы.');
+            if (answers.q3 && answers.q3.includes('D')) recs.push('Договоритесь о встречах без телефонов.');
+            if (answers.q3 && answers.q3.includes('E')) recs.push('Нет гаджетов за 1 час до сна + дыхательные упражнения.');
             if (q4p > 1) recs.push('Цифровой детокс: хотя бы 1 день в неделю без экранов.');
             if (q5p > 2) recs.push('Пересмотрите отношение к гаджетам — ставьте их на беззвучный режим чаще.');
             if (levelIndex >= 3) recs.push('Если сложно справиться самостоятельно — обратитесь к психологу.');
