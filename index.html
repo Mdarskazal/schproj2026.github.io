@@ -120,12 +120,11 @@
         </div>
     </nav>
 
-    <!-- Toast-контейнер -->
     <div id="toast-container"></div>
 
     <div class="container pt-5 mt-5">
         <div id="quiz" class="quiz-card card p-5">
-            <!-- Вопросы 1-5 -->
+            <!-- Вопросы -->
             <div class="question active" id="q1">
                 <h3 class="mb-4">1. Сколько времени в день вы проводите за гаджетами?</h3>
                 <div class="form-check"><input type="radio" name="q1" id="q1A" value="A"><label for="q1A">Менее 1 часа</label></div>
@@ -214,7 +213,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toast-уведомления
+        // Toast
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -232,7 +231,7 @@
         let current = 0;
         const answers = {};
 
-        const explanations = { /* ... (оставлено без изменений) ... */ 
+        const explanations = {
             q1: { A:'Менее 1 часа — очень низкая нагрузка. Гаджеты — просто инструмент.', B:'1–2 часа — хороший баланс.', C:'2–4 часа — средний уровень. Ставь лимиты.', D:'4–6 часов — высокий уровень. Начинай сокращать.', E:'Более 6 часов — сильная зависимость. Срочно вводи перерывы.' },
             q2: { A:'Обучение — самый полезный сценарий.', B:'Связь — главное преимущество.', C:'Развлечения — самый рискованный вариант.', D:'Работа — оправданное использование.', E:'Смешанное использование — следи за балансом.' },
             q3: { A:'Нет последствий — отлично.', B:'Здоровье — используй правило 20-20-20 и фильтры.', C:'Учёба страдает — включай Pomodoro.', D:'Отношения ухудшаются — планируй встречи без телефонов.', E:'Сон и настроение — убирай гаджеты за час до сна.' },
@@ -240,7 +239,7 @@
             q5: { A:'Полностью необходимость — здоровое отношение.', B:'В основном необходимость — хороший баланс.', C:'Оба варианта — реалистичный взгляд.', D:'В основном зависимость — пора перестраивать привычки.', E:'Чистая зависимость — срочно меняй подход.' }
         };
 
-        // Логика вопроса 3 (оставлена без изменений)
+        // Логика вопроса 3
         document.querySelectorAll('#q3 input[type="checkbox"]').forEach(input => {
             input.addEventListener('change', function() {
                 if (this.id === 'q3A') {
@@ -257,19 +256,18 @@
 
         document.getElementById('q1').classList.add('active');
 
+        // ИСПРАВЛЕННАЯ ЛОГИКА КНОПКИ "ДАЛЕЕ"
         document.getElementById('next').addEventListener('click', () => {
             const q = questions[current];
             let selected = [];
 
             if (q === 'q2' || q === 'q3') {
+                // Чекбоксы
                 selected = Array.from(document.querySelectorAll(`#${q} input:checked`)).map(i => i.value);
             } else {
-                const sel = document.querySelector(`#${q} input:checked`);
-                if (!sel) {
-                    showToast(`Вы не ответили на вопрос ${current + 1}`);
-                    return;
-                }
-                selected = [sel.value];
+                // Радио-кнопки (включая 5-й вопрос "Оба варианта")
+                const checked = document.querySelector(`#${q} input[type="radio"]:checked`);
+                if (checked) selected = [checked.value];
             }
 
             if (selected.length === 0) {
@@ -277,10 +275,11 @@
                 return;
             }
 
-            answers[q] = q === 'q2' || q === 'q3' ? selected : selected[0];
+            answers[q] = (q === 'q2' || q === 'q3') ? selected : selected[0];
 
             document.getElementById(q).classList.remove('active');
             current++;
+
             if (current < questions.length) {
                 document.getElementById(questions[current]).classList.add('active');
             } else {
@@ -296,13 +295,12 @@
             document.getElementById('quiz').style.display = 'none';
             document.getElementById('result').style.display = 'block';
 
-            // ... (формирование результатов и рекомендаций — без изменений) ...
-
             let ansHTML = '';
             for (let q in answers) {
                 const questionText = document.querySelector(`#${q} h3`).innerText.trim();
                 let answerText = '';
                 let explText = '';
+
                 if (Array.isArray(answers[q])) {
                     answers[q].forEach(val => {
                         answerText += (answerText ? ', ' : '') + document.querySelector(`#${q}${val} + label`).textContent.trim();
@@ -312,11 +310,12 @@
                     answerText = document.querySelector(`#${q}${answers[q]} + label`).textContent.trim();
                     explText = explanations[q][answers[q]];
                 }
+
                 ansHTML += `<div class="list-group-item py-3"><strong>${questionText}</strong><br>${answerText}: ${explText}</div>`;
             }
             document.getElementById('answersList').innerHTML = ansHTML;
 
-            // Подсчёт баллов и рекомендации (оставлено)
+            // Подсчёт баллов и рекомендации (без изменений)
             function getPoints(v) {
                 if (Array.isArray(v)) return Math.max(...v.map(val => ['A','B','C','D','E'].indexOf(val)));
                 return ['A','B','C','D','E'].indexOf(v);
@@ -353,7 +352,7 @@
             recHTML += '</ul>';
             document.getElementById('recommendations').innerHTML = recHTML;
 
-            // ==================== МОДАЛЬНОЕ ОКНО + navigator.share ====================
+            // Модальное окно + Поделиться
             document.getElementById('saveRecs').addEventListener('click', () => {
                 const recText = recs.map((r, i) => `${i+1}. ${r}`).join('\n\n');
                 const fullText = `Рекомендации из теста "Гаджеты — зависимость или необходимость?"\n\n${recText}`;
@@ -376,9 +375,7 @@
                                 text: fullText
                             });
                             modal.hide();
-                        } catch (err) {
-                            console.log('Share cancelled');
-                        }
+                        } catch (e) {}
                     } else {
                         navigator.clipboard.writeText(fullText).then(() => {
                             showToast('✅ Текст скопирован в буфер');
