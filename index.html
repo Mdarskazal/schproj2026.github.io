@@ -15,6 +15,8 @@
             --accent: #4d7cff;
             --muted: #6b7280;
             --navbar-bg: rgba(255,255,255,0.95);
+            --toast-bg: #333;
+            --toast-text: #fff;
             --transition: all 0.8s ease;
         }
         [data-theme="dark"] {
@@ -25,6 +27,8 @@
             --accent: #60a5fa;
             --muted: #94a3b8;
             --navbar-bg: rgba(15,23,42,0.95);
+            --toast-bg: #444;
+            --toast-text: #e2e8f0;
         }
 
         body {
@@ -54,11 +58,7 @@
             padding: 1.5rem;
         }
 
-        h1, h2, h3, h4, strong, label, .list-group-item {
-            color: var(--text) !important;
-        }
-
-        /* Toast-уведомления */
+        /* Кастомные уведомления (toast) */
         #toast-container {
             position: fixed;
             top: 80px;
@@ -68,33 +68,43 @@
             max-width: 90%;
         }
         .custom-toast {
-            background: #333;
-            color: #fff;
-            padding: 14px 20px;
+            background: var(--toast-bg);
+            color: var(--toast-text);
+            padding: 1rem 1.5rem;
             border-radius: 12px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.4);
             opacity: 0;
             transform: translateY(-20px);
-            transition: all 0.4s ease;
-            margin-bottom: 10px;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            margin-bottom: 0.75rem;
             text-align: center;
-            font-size: 1.05rem;
         }
-        [data-theme="dark"] .custom-toast { background: #444; color: #e2e8f0; }
-        .custom-toast.show { opacity: 1; transform: translateY(0); }
+        .custom-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        .form-check { margin-bottom: 18px; }
+        /* Hover-эффект лупы */
+        .form-check label, .list-group-item {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .form-check label:hover, .list-group-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(77,124,255,0.25);
+        }
+
+        .form-check { margin-bottom: 1.25rem; }
         .form-check input[type="radio"], .form-check input[type="checkbox"] { display: none; }
         .form-check label {
             display: block;
-            padding: 18px 24px;
+            padding: 1rem 1.5rem;
             border-radius: 999px;
             border: 2px solid var(--card-border);
             background: var(--card-bg);
             color: var(--text);
             transition: all 0.2s ease;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
         .form-check label:hover { background: rgba(77,124,255,0.08); border-color: var(--accent); }
         .form-check input:checked + label {
@@ -103,11 +113,34 @@
             box-shadow: 0 0 0 6px rgba(77,124,255,0.15);
         }
 
-        .list-group-item { padding: 1.25rem 1.5rem; }
-        .alert { border-radius: 14px; }
+        .list-group-item {
+            background: var(--card-bg);
+            border-color: var(--card-border);
+            color: var(--text);
+            padding: 1.25rem 1.5rem;
+        }
+        .alert {
+            border-radius: 14px;
+            background: rgba(77,124,255,0.08);
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        /* Адаптация под мобильные */
+        @media (max-width: 576px) {
+            body { padding-top: 60px; }
+            .navbar { padding: 0.75rem 1rem; }
+            .navbar h1 { font-size: 1.1rem; }
+            .quiz-card, .result-card { padding: 1.25rem; margin: 0 0.75rem; }
+            h3 { font-size: 1.25rem; }
+            .form-check label { padding: 0.9rem 1.3rem; font-size: 1rem; }
+            .btn { padding: 0.75rem 1.25rem; font-size: 1.05rem; }
+            #toast-container { top: 70px; }
+        }
     </style>
 </head>
 <body data-theme="light">
+    <!-- Шапка -->
     <nav class="navbar fixed-top shadow-sm">
         <div class="container-fluid d-flex align-items-center">
             <div class="flex-grow-1"></div>
@@ -120,11 +153,12 @@
         </div>
     </nav>
 
+    <!-- Кастомные уведомления -->
     <div id="toast-container"></div>
 
-    <div class="container pt-5 mt-5">
-        <div id="quiz" class="quiz-card card p-5">
-            <!-- Вопросы -->
+    <div class="container pt-4">
+        <div id="quiz" class="quiz-card card">
+            <!-- Вопрос 1 -->
             <div class="question active" id="q1">
                 <h3 class="mb-4">1. Сколько времени в день вы проводите за гаджетами?</h3>
                 <div class="form-check"><input type="radio" name="q1" id="q1A" value="A"><label for="q1A">Менее 1 часа</label></div>
@@ -170,14 +204,14 @@
                 <div class="form-check"><input type="radio" name="q5" id="q5E" value="E"><label for="q5E">Исключительно источник зависимости</label></div>
             </div>
 
-            <button id="next" class="btn btn-primary w-100 mt-5 py-3 fw-bold fs-5">Далее →</button>
+            <button id="next" class="btn btn-primary w-100 mt-4 py-3 fw-bold fs-5">Далее →</button>
         </div>
 
-        <div id="result" class="result-card mt-5 p-5" style="display:none;">
-            <h2 class="text-center mb-5">Ваши результаты</h2>
+        <div id="result" class="result-card mt-4" style="display:none;">
+            <h2 class="text-center mb-4">Ваши результаты</h2>
 
-            <div class="mb-5">
-                <button class="btn btn-outline-primary w-100 py-3 fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#userAnswers">
+            <div class="mb-4">
+                <button class="btn btn-outline-primary w-100 py-3 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#userAnswers">
                     ▼ Ваши ответы и пояснения
                 </button>
                 <div id="userAnswers" class="collapse mt-3">
@@ -194,7 +228,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно -->
+    <!-- Модальное окно для сохранения -->
     <div class="modal fade" id="saveModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -203,9 +237,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <p>Что сделать с рекомендациями?</p>
-                    <button type="button" class="btn btn-primary w-100 mb-3" id="copyToClipboard">Скопировать в буфер обмена</button>
-                    <button type="button" class="btn btn-success w-100" id="shareBtn">Поделиться</button>
+                    <p>Выберите действие:</p>
+                    <button type="button" class="btn btn-primary w-100 mb-3" id="copyToClipboard">Скопировать в буфер</button>
+                    <button type="button" class="btn btn-success w-100" id="openInNotes">Открыть в Заметках (iOS)</button>
                 </div>
             </div>
         </div>
@@ -213,14 +247,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toast
+        // Функция показа кастомного уведомления
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = 'custom-toast';
             toast.textContent = message;
             container.appendChild(toast);
+
+            // Показываем с анимацией
             setTimeout(() => toast.classList.add('show'), 10);
+
+            // Убираем через 4 секунды
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 400);
@@ -256,30 +294,34 @@
 
         document.getElementById('q1').classList.add('active');
 
-        // ИСПРАВЛЕННАЯ ЛОГИКА КНОПКИ "ДАЛЕЕ"
         document.getElementById('next').addEventListener('click', () => {
             const q = questions[current];
             let selected = [];
 
             if (q === 'q2' || q === 'q3') {
-                // Чекбоксы
                 selected = Array.from(document.querySelectorAll(`#${q} input:checked`)).map(i => i.value);
             } else {
-                // Радио-кнопки (включая 5-й вопрос "Оба варианта")
-                const checked = document.querySelector(`#${q} input[type="radio"]:checked`);
-                if (checked) selected = [checked.value];
+                const sel = document.querySelector(`#${q} input:checked`);
+                if (!sel) {
+                    let missed = [];
+                    for (let i = 0; i <= current; i++) {
+                        if (!answers[questions[i]]) missed.push(i + 1);
+                    }
+                    showToast(`Не отвечены вопросы: ${missed.join(', ')}`);
+                    return;
+                }
+                selected = [sel.value];
             }
 
             if (selected.length === 0) {
-                showToast(`Вы не ответили на вопрос ${current + 1}`);
+                showToast(`Не отвечен вопрос ${current + 1}`);
                 return;
             }
 
-            answers[q] = (q === 'q2' || q === 'q3') ? selected : selected[0];
+            answers[q] = q === 'q2' || q === 'q3' ? selected : selected[0];
 
             document.getElementById(q).classList.remove('active');
             current++;
-
             if (current < questions.length) {
                 document.getElementById(questions[current]).classList.add('active');
             } else {
@@ -311,18 +353,22 @@
                     explText = explanations[q][answers[q]];
                 }
 
-                ansHTML += `<div class="list-group-item py-3"><strong>${questionText}</strong><br>${answerText}: ${explText}</div>`;
+                ansHTML += `
+                    <div class="list-group-item py-3">
+                        <strong>${questionText}</strong><br>
+                        ${answerText}: ${explText}
+                    </div>`;
             }
             document.getElementById('answersList').innerHTML = ansHTML;
 
-            // Подсчёт баллов и рекомендации (без изменений)
+            // Подсчёт баллов
             function getPoints(v) {
                 if (Array.isArray(v)) return Math.max(...v.map(val => ['A','B','C','D','E'].indexOf(val)));
                 return ['A','B','C','D','E'].indexOf(v);
             }
             let score = getPoints(answers.q1) * 2 + getPoints(answers.q3) * 1.5 + getPoints(answers.q4) * 2 + getPoints(answers.q5) * 0.5;
-            let levelIndex = score < 6 ? 0 : score < 10 ? 1 : score < 14 ? 2 : score < 18 ? 3 : 4;
 
+            let levelIndex = score < 6 ? 0 : score < 10 ? 1 : score < 14 ? 2 : score < 18 ? 3 : 4;
             const levels = [
                 'Очень низкая зависимость: Гаджеты для вас — чистая необходимость. Продолжайте в том же духе!',
                 'Низкая зависимость: Вы хорошо контролируете время. Гаджеты — полезный инструмент.',
@@ -332,6 +378,7 @@
             ];
             document.getElementById('overall').innerHTML = `<h3 class="mt-5">Общий вывод</h3><div class="alert alert-info fs-5 p-4">${levels[levelIndex]}</div>`;
 
+            // Рекомендации
             let recs = [];
             const q1p = getPoints(answers.q1);
             const q4p = getPoints(answers.q4);
@@ -343,7 +390,7 @@
             if (answers.q3 && answers.q3.includes('C')) recs.push('Используйте Pomodoro и выключайте уведомления во время учёбы.');
             if (answers.q3 && answers.q3.includes('E')) recs.push('Убирайте гаджеты за час до сна.');
             if (q4p > 1) recs.push('Попробуйте цифровой детокс хотя бы 1 день в неделю.');
-            if (q5p > 2) recs.push('Пересмотрите отношение к гаджетам — ставьте их на беззвучный режим чаще.');
+            if (q5p > 2) recs.push('Пересмотрите роль гаджетов в жизни — ставьте телефон на беззвучный чаще.');
 
             if (recs.length === 0) recs.push('Всё отлично! Ваш баланс использования гаджетов — здоровый.');
 
@@ -352,7 +399,7 @@
             recHTML += '</ul>';
             document.getElementById('recommendations').innerHTML = recHTML;
 
-            // Модальное окно + Поделиться
+            // Сохранение рекомендаций
             document.getElementById('saveRecs').addEventListener('click', () => {
                 const recText = recs.map((r, i) => `${i+1}. ${r}`).join('\n\n');
                 const fullText = `Рекомендации из теста "Гаджеты — зависимость или необходимость?"\n\n${recText}`;
@@ -362,29 +409,12 @@
 
                 document.getElementById('copyToClipboard').onclick = () => {
                     navigator.clipboard.writeText(fullText).then(() => {
-                        showToast('✅ Скопировано в буфер обмена!');
+                        showToast('Скопировано в буфер обмена!');
                         modal.hide();
                     });
                 };
-
-                document.getElementById('shareBtn').onclick = async () => {
-                    if (navigator.share) {
-                        try {
-                            await navigator.share({
-                                title: 'Рекомендации по гаджетам',
-                                text: fullText
-                            });
-                            modal.hide();
-                        } catch (e) {}
-                    } else {
-                        navigator.clipboard.writeText(fullText).then(() => {
-                            showToast('✅ Текст скопирован в буфер');
-                            modal.hide();
-                        });
-                    }
-                };
             });
-        });
+        }
 
         document.getElementById('themeToggle').addEventListener('click', () => {
             const newTheme = document.body.dataset.theme === 'light' ? 'dark' : 'light';
